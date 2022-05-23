@@ -38,10 +38,19 @@ npm run lint
 
 
 
+## If Dependencies don't work properly
+
 If Cors does not work, try to install the following packages:
 
 ```
 npm install cors --save
+```
+
+If MongoDB does not work, try to install the following packages:
+
+```
+npm install mongoose
+npm install @types/mongoose --save-dev
 ```
 
 Based on:
