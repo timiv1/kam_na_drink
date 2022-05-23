@@ -1,6 +1,47 @@
-https://www.npmjs.com/package/express-generator-typescript
+# Backend express-typescript
 
-Commands used:
+## Commands
 
+Globally install express-typescript
+
+```
+npm install -g express-generator-typescript
+
+```
+
+
+Globally install eslint:
+
+```
+npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
+
+```
+
+
+To install all of the dependencies:
+
+```
+npm install
+
+```
+
+
+To start the application in development mode run:
+
+```
 npm run start:dev
+
+```
+
+
+To check errors in the project and future optimizations run:
+
+```
 npm run lint
+
+```
+
+
+Based on:
+
+https://www.npmjs.com/package/express-generator-typescript
