@@ -37,6 +37,13 @@ npm run lint
 ```
 
 
+
+If Cors does not work, try to install the following packages:
+
+```
+npm install cors --save
+```
+
 Based on:
 
 https://www.npmjs.com/package/express-generator-typescript

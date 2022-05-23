@@ -1,5 +1,6 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
+import { ParamMissingError } from '@shared/errors';
 
 const cors = require('cors');
 const router = Router();
@@ -11,9 +12,3 @@ export const p = {
     update: '/update',
     delete: '/delete',
 } as const;
-
-const drinks: string = "/drinks";
-const locals: string = "/locals";
-
-// Export default
-export default router;
