@@ -7,6 +7,7 @@ interface IDrink {
     id: number;
     name: string;
     price: number;
+    year: number;
     volume: number;
     alcohol: number;
     description: string;

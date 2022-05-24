@@ -19,7 +19,16 @@ const router = Router();
  *           description: The auto-generated id of the bar
  *         name:
  *           type: string
- *           description: The bar title
+ *           description: Name of the bar
+ *         menu_id:
+ *           type: number
+ *           description: Menu_id of the bar
+ *         location_id:
+ *           type: number
+ *           description: Location_id of the bar
+ *         contact_id:
+ *           type: number
+ *           description: Contact_id of the bar
  */
 
 /**
@@ -56,7 +65,6 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/Bar'
  */
-
 router.get('/', async (req: Request, res: Response) => {
   try {
     const bars = await new Bar().fetchAll({ withRelated: "menu" })
@@ -95,7 +103,7 @@ router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id
     const bar = await new Bar({ id }).fetch()
     console.log('bar')
-    return res.status(200).json({ bar })
+    return res.status(200).send(bar)
   } catch (err: any) {
     if (err?.message === "EmptyResponse")
       return res.sendStatus(404)
@@ -103,7 +111,6 @@ router.get('/:id', async (req: Request, res: Response) => {
       return res.status(500).send(err)
   }
 });
-
 
 /**
  * @swagger
@@ -135,7 +142,7 @@ router.get('/:id/work_time', async (req: Request, res: Response) => {
     const workTimeBar = await new WorkTimeBar().where({ bar_id: id }).fetchAll({ withRelated: ["workTime"], omitPivot: false }
     )
     console.log('bar')
-    return res.status(200).json({ workTimeBar })
+    return res.status(200).send(workTimeBar)
   } catch (err: any) {
     console.log(err)
     if (err?.message === "EmptyResponse")
@@ -144,7 +151,6 @@ router.get('/:id/work_time', async (req: Request, res: Response) => {
       return res.status(500).send(err)
   }
 });
-
 
 /**
  * @swagger
@@ -168,7 +174,6 @@ router.get('/:id/work_time', async (req: Request, res: Response) => {
  *       500:
  *         description: Some server error
  */
-
 router.post('/', async (req: Request, res: Response) => {
   try {
     let data = req.body;
@@ -180,9 +185,7 @@ router.post('/', async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(500).send(error)
   }
-
 });
-
 
 /**
  * @swagger
@@ -214,11 +217,12 @@ router.post('/', async (req: Request, res: Response) => {
  *         description: Some server error
  */
 
+
+//TODO: ???
+
 // get worktimes for bar  bar/1/work_times
 // put worktimes for bar  bar/1/work_times/1 add worktime to bar
 // delete worktimes for bar  bar/1/work_times odstrani worktime maping
-
-
 router.post('/:id/work_time', async (req: Request, res: Response) => {
   try {
     const id = req.params.id //???
@@ -236,11 +240,6 @@ router.post('/:id/work_time', async (req: Request, res: Response) => {
   }
 
 });
-
-
-
-
-
 
 /**
  * @swagger
@@ -273,7 +272,6 @@ router.post('/:id/work_time', async (req: Request, res: Response) => {
  *      500:
  *        description: Some error happened
  */
-
 router.put("/:id", async (req: Request, res: Response) => {
   try {
     const updatedBar: IBar = req.body;
@@ -288,8 +286,6 @@ router.put("/:id", async (req: Request, res: Response) => {
     return res.status(500).send(error)
   }
 });
-
-
 
 /**
  * @swagger
@@ -321,7 +317,7 @@ router.put("/:id", async (req: Request, res: Response) => {
  *         description: Some server error
  */
 
-// delete worktimes for bar  bar/1/work_times odstrani worktime maping
+// TODO:??? delete worktimes for bar  bar/1/work_times odstrani worktime maping
 router.delete('/:barId/work_time/:workTimeBarId', async (req: Request, res: Response) => {
   try {
     const barId = req.params.barId //???
@@ -339,7 +335,6 @@ router.delete('/:barId/work_time/:workTimeBarId', async (req: Request, res: Resp
   }
 
 });
-
 
 /**
  * @swagger
@@ -374,6 +369,5 @@ router.delete("/:id", async (req: Request, res: Response) => {
     return res.status(500).send(error)
   }
 });
-
 
 export default router

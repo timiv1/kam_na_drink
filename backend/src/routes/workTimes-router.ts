@@ -95,7 +95,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 })
 
 
-
+// TODO: ???
 // add work time (day hours) to bar
 
 /**
@@ -170,10 +170,12 @@ router.delete("/:id", async (req: Request, res: Response) => {
     }
 });
 
+
+//TODO: ???
+
 // put worktimes for bar  work_times/1 edit worktime with id
 // delete worktime for bar  work_times/1 odstrani worktime iz worktime tabele in mapinge
 // or disable deleting until all the mapings are removed
 // get worktimes/1/bars get bars with specific worktime
-
 
 export default router

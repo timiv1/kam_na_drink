@@ -10,6 +10,7 @@ const router = Router()
  *     contact:
  *       type: object
  *       required:
+ *         - id
  *         - phone
  *         - email
  *       properties:
@@ -18,10 +19,10 @@ const router = Router()
  *           description: The auto-generated id of the contact
  *         phone:
  *           type: string
- *           description: The contact title
+ *           description: Contact's phone number
  *         email:
  *           type: string
- *           description: The contact title
+ *           description: Contact's email
  */
 
 /**

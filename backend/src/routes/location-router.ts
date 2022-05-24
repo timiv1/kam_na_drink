@@ -10,6 +10,7 @@ const router = Router()
  *     location:
  *       type: object
  *       required:
+ *         - id
  *         - title
  *         - street
  *         - post_number
@@ -22,22 +23,22 @@ const router = Router()
  *           description: The auto-generated id of the location
  *         title:
  *           type: string
- *           description: The location title
+ *           description: The location's title
  *         street:
  *           type: string
- *           description: The location title
+ *           description: The location's street
  *         post_number:
  *           type: integer
- *           description: The auto-generated id of the location
+ *           description: The location's post_number
  *         city:
  *           type: string
- *           description: The location title
+ *           description: The location's city
  *         country:
  *           type: string
- *           description: The location title
+ *           description: The location's country
  *         GPS_coordinates:
  *           type: string
- *           description: The auto-generated id of the location
+ *           description: The location's GPS_coordinates
  */
 
 /**
