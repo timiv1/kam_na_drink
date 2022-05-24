@@ -8,16 +8,18 @@ ali pa pač tako kot je pri vseh ostalih putih(da v bodyju vnesemo vse)
 
 TODO: Poenotit vse Delete API-je -> da vračajo vsi isti response (eni namreč nimajo responsa )
 
+TODO: Uporabit library za validacijo input fieldov -> da bomo preveril vse inpute ki pridejo v api in ki gredo v bazo
+
 TODO: API /api/bars/{id}/work_time je edini, ki ima Id autoincrement, pri ostalih apijih je treba v body-ju vnesit id poleg. -> kako se bomo zdej naredil?
 
 TODO: Potrebno poenotit vse route pathe v API-jih
 
 TODO:
 GET/POST/PUT/DELETE
-Če vneseš id ki ne obstaja -> se nared exception in aplikacija ne sme crknat lol
+Če vneseš id ki ne obstaja -> se more naredit exception in aplikacija ne sme crknat lol
 
 TODO: Kriptiranje Passwordov
 
-TODO: JWT / Auth0
+TODO: JWT / Auth0 -> pač ne vem men se zdele ne da s tem jebat, bomo naredil kasnej
 
 TODO: Cors ( Ubistvu že mam na enem sklopu apijev implementan, je treba še samo na ostalih dodat v argumente v API-ju)
