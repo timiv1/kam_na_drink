@@ -81,7 +81,7 @@ const drink_types: string = "/drink_types";
 router.get('/', async (_: Request, res: Response) => {
     try {
         const drinks = await new Drink().fetchAll({ withRelated: "drink_type" });
-        return res.status(OK).json({ drinks });
+        return res.status(OK).json(drinks);
     } catch (error) {
         console.log(error);
     }
@@ -107,7 +107,7 @@ router.get('/price', async (_: Request, res: Response) => {
     try {
         const drinks = await new Drink().fetchAll({ withRelated: "drink_type" });
         drinks.orderBy('price', 'ASC');
-        return res.status(OK).json({drinks});
+        return res.status(OK).json(drinks);
     } catch (err) {
         console.log(err);
     }
@@ -253,7 +253,6 @@ router.delete("/:id", async (req: Request, res: Response) => {
 });
 
 //TODO: ??? Nevem men ne gre klicat posamezno tega API-ja, vendar ga pa pokaže pri /get/drinks
-
 /**
  * @swagger
  * /api/drinks/types:
@@ -275,7 +274,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
 router.get('/types', async (_: Request, res: Response) => {
     try {
         const drink_types = await new DrinkType().fetchAll({ withRelated: "drinks" });
-        return res.status(OK).json({ drink_types });
+        return res.status(OK).json(drink_types);
     } catch (error) {
         
     }

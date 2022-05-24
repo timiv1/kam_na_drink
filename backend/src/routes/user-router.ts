@@ -309,7 +309,7 @@ router.delete(p.delete+":id", async (req: Request, res: Response) => {
  */
 router.get(drinks + ":id", async (req: Request, res: Response) => {
     const id = req.params.id
-    const user_drinks = await new DrinkUser().where({ userId: id }).fetchAll({ withRelated: "drink" });
+    const user_drinks = await new DrinkUser().where({ userId: id }).fetchAll({ withRelated: "drinks" });
     return res.status(OK).json(user_drinks);
 });
          
@@ -399,10 +399,10 @@ router.delete(drinks + p.delete + ":id", async (req: Request, res: Response) => 
  *               items:
  *                 $ref: '#/components/schemas/userbar'
  */
- router.get(bars + p.get, async (_: Request, res: Response) => {
+ router.get('/bars', async (_: Request, res: Response) => {
     try {
-        const users_locals = await new BarUser().fetchAll();
-        return res.status(OK).json({ user_locals: users_locals });
+        const users_bars = await new BarUser().fetchAll({});
+        return res.status(OK).json({ user_bars: users_bars });
     } catch (error) {
         console.log(error);
     }
@@ -433,10 +433,10 @@ router.delete(drinks + p.delete + ":id", async (req: Request, res: Response) => 
  *       404:
  *         description: The user bar was not found
  */
-router.get(bars + ":id", async (req: Request, res: Response) => {
+router.get(bars + p.get + "/:id", async (req: Request, res: Response) => {
     const id = req.params.id
-    const user_locals = await new BarUser().where({ userId: id }).fetchAll({ withRelated: "local" });
-    return res.status(OK).json(user_locals);
+    const users_bars = await new BarUser().where({ userId: id }).fetchAll({ withRelated: "bars" });
+    return res.status(OK).json(users_bars);
 });
 
 /**
@@ -463,11 +463,11 @@ router.get(bars + ":id", async (req: Request, res: Response) => {
  */
 router.post(bars + p.add, async (req: Request, res: Response) => {
     try {
-        let newUserLocal: IDrinkUser = req.body;
-        if (!newUserLocal) {
+        let newUserBar: IDrinkUser = req.body;
+        if (!newUserBar) {
             throw new ParamMissingError();
         }
-        const newEntry = await new BarUser().save(newUserLocal);
+        const newEntry = await new BarUser().save(newUserBar);
         return res.status(CREATED).json(newEntry);
     } catch (error) {
         console.log(error);
