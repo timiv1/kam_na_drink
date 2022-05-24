@@ -78,7 +78,9 @@
     "knex": "^0.21.21",
     "module-alias": "^2.2.2",
     "morgan": "^1.10.0",
-    "sqlite3": "^5.0.4"
+    "sqlite3": "^5.0.4",
+    "swagger-jsdoc": "^6.2.1",
+    "swagger-ui-express": "^4.4.0"
   },
   "devDependencies": {
     "@types/command-line-args": "^5.2.0",

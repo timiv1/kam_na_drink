@@ -11,6 +11,8 @@ import apiRouter from './routes/api';
 import logger from 'jet-logger';
 import { CustomError } from '@shared/errors';
 
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 // Constants
 const app = express();
@@ -52,6 +54,39 @@ app.use((err: Error | CustomError, _: Request, res: Response, __: NextFunction) 
     });
 });
 
+
+
+/***********************************************************************************
+ *                                  Swagger
+ **********************************************************************************/
+
+const PORT = process.env.PORT || 300;
+
+app.use('/api', apiRouter);
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Express app swagger',
+      version: '1.0.0',
+      description:
+        'This is a simple CRUD API application made with Express and documented with Swagger',
+      license: {
+        name: 'MIT',
+        url: 'https://spdx.org/licenses/MIT.html',
+      },
+    },
+    servers: [
+      {
+        url: `http://localhost:${PORT}/`,
+      },
+    ],
+  },
+  apis: ['./src/routes/*'],
+};
+
+const specs = swaggerJsdoc(options);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 /***********************************************************************************
  *                                  Front-end content
