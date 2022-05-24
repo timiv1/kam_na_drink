@@ -1,7 +1,3 @@
-
-
-
-
 import { Router, Request, Response } from 'express';
 import { Bar, IBar } from '@models/bar'
 import { WorkTimeBar, IWorkTimeBar } from '@models/work_time_bar'

@@ -37,7 +37,6 @@ if (process.env.NODE_ENV === 'production') {
     app.use(helmet());
 }
 
-
 /***********************************************************************************
  *                         API routes and error handling
  **********************************************************************************/
@@ -54,12 +53,9 @@ app.use((err: Error | CustomError, _: Request, res: Response, __: NextFunction) 
     });
 });
 
-
-
 /***********************************************************************************
  *                                  Swagger
  **********************************************************************************/
-
 const PORT = process.env.PORT || 300;
 
 app.use('/api', apiRouter);
@@ -104,8 +100,6 @@ app.use(express.static(staticDir));
 app.get('*', (_: Request, res: Response) => {
     res.sendFile('index.html', {root: viewsDir});
 });
-
-
 
 // Export here and start in a diff file (for testing).
 export default app;
