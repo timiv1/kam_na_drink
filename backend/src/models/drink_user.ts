@@ -4,8 +4,8 @@ import { User } from '@models/user';
 
 interface IDrinkUser {
     id: number;
-    drinkId: number;
-    userId: number;
+    drink_id: number;
+    user_id: number;
 }
 
 const DrinkUser = bookshelf.model("DrinksUser", {

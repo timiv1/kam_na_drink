@@ -59,7 +59,7 @@ const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const bars = await new Bar().fetchAll()
+    const bars = await new Bar().fetchAll({ withRelated: "menu" })
     return res.status(200).send(bars)
   } catch (err) {
     console.log(err)
@@ -172,8 +172,6 @@ router.get('/:id/work_time', async (req: Request, res: Response) => {
 router.post('/', async (req: Request, res: Response) => {
   try {
     let data = req.body;
-    console.log(data)
-
     if (!data) {
       return res.status(500).send("missing parameter")
     }
@@ -223,7 +221,7 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.post('/:id/work_time', async (req: Request, res: Response) => {
   try {
-    const id = req.params.id
+    const id = req.params.id //???
     let data: IWorkTimeBar = req.body;
     if (!data) {
       return res.status(500).send("missing parameter")
@@ -282,7 +280,6 @@ router.put("/:id", async (req: Request, res: Response) => {
     const id = req.params.id
     if (!updatedBar) {
       return res.status(500).send("missing parameter")
-
     }
     const newEntry = await new Bar({ id }).save(updatedBar);
     return res.status(200).json(newEntry);
@@ -327,7 +324,7 @@ router.put("/:id", async (req: Request, res: Response) => {
 // delete worktimes for bar  bar/1/work_times odstrani worktime maping
 router.delete('/:barId/work_time/:workTimeBarId', async (req: Request, res: Response) => {
   try {
-    const barId = req.params.barId
+    const barId = req.params.barId //???
     const id = req.params.workTimeBarId
     let data: IWorkTimeBar = req.body;
     if (!data) {

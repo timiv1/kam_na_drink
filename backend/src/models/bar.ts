@@ -2,10 +2,15 @@ import { bookshelf } from '@models/bookshelf'
 import { WorkTime } from "@models/workTime"
 import { Contact } from "@models/contact"
 import { Location } from "@models/location"
+import { Menu } from "@models/menu"
+import { BarUser } from "@models/bar_user"
 
 interface IBar {
     id: number;
     name: string;
+    menu_id: number;
+    location_id: number;
+    contact_id: number;
 }
 
 const Bar = bookshelf.model("Bar", {
@@ -18,7 +23,15 @@ const Bar = bookshelf.model("Bar", {
     },
     location() {
         return this.belongsTo(Location)
+        
+    },
+    menu() {
+        return this.belongsTo(Menu);
+    },
+    users() {
+        return this.hasMany(BarUser);
     }
+    
 });
 
 export { Bar, IBar };

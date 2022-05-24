@@ -15,6 +15,4 @@ const WorkTimeBar = bookshelf.model("WorkTimeBar", {
     }
 });
 
-// try like this if it doesn't work try with examle in docs
-
 export { WorkTimeBar, IWorkTimeBar };

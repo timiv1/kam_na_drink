@@ -1,22 +1,28 @@
 import { bookshelf } from '@models/bookshelf'
-import { DrinkUser } from './drink_user';
+import { DrinkUser } from '@models/drink_user'
+import { DrinkType} from '@models/drink_type'
+import { DrinkMenu} from '@models/drink_menu'
 
 interface IDrink {
     id: number;
-    title: string;
+    name: string;
     price: number;
-    netoAmount: number;
-    alcoholPercentage: number;
-    year: number;
-    ingredients: string;
-    originId: number;
-    typeOfDrinkId: number;
+    volume: number;
+    alcohol: number;
+    description: string;
+    drink_type_id: number;
 }
 
 const Drink = bookshelf.model("Drink", {
     tableName: 'drinks',
     users() {
         return this.hasMany(DrinkUser);
+    },
+    drink_type() {
+        return this.belongsTo(DrinkType);
+    },
+    drinkmenus() {
+        return this.hasMany(DrinkMenu);
     }
 });
 

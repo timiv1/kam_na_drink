@@ -3,7 +3,7 @@ import { Request, Response, Router } from 'express';
 import { ParamMissingError } from '@shared/errors';
 import { User, IUser } from '@models/user';
 import { DrinkUser, IDrinkUser } from '@models/drink_user';
-import { LocalUser } from '@models/local_user';
+import { BarUser } from '@models/bar_user';
 
 const router = Router();
 const { CREATED, OK } = StatusCodes;
@@ -129,7 +129,7 @@ router.delete(drinks + p.delete + "/:id", async (req: Request, res: Response) =>
 //Get all users locals.
  router.get(locals + p.get, async (_: Request, res: Response) => {
     try {
-        const users_locals = await new LocalUser().fetchAll();
+        const users_locals = await new BarUser().fetchAll();
         return res.status(OK).json({ user_locals: users_locals });
     } catch (error) {
         console.log(error);
@@ -139,7 +139,7 @@ router.delete(drinks + p.delete + "/:id", async (req: Request, res: Response) =>
 // Get all users locals by userId.
 router.get(locals + "/:id", async (req: Request, res: Response) => {
     const id = req.params.id
-    const user_locals = await new LocalUser().where({ userId: id }).fetchAll({ withRelated: "local" });
+    const user_locals = await new BarUser().where({ userId: id }).fetchAll({ withRelated: "local" });
     return res.status(OK).json(user_locals);
 });
 
@@ -150,7 +150,7 @@ router.post(locals + p.add, async (req: Request, res: Response) => {
         if (!newUserLocal) {
             throw new ParamMissingError();
         }
-        const newEntry = await new LocalUser().save(newUserLocal);
+        const newEntry = await new BarUser().save(newUserLocal);
         return res.status(CREATED).json(newEntry);
     } catch (error) {
         console.log(error);
@@ -164,7 +164,7 @@ router.delete(locals + p.delete + "/:id", async (req: Request, res: Response) =>
         if (!id) {
             throw new ParamMissingError();
         }
-        await new LocalUser({ id }).destroy();
+        await new BarUser({ id }).destroy();
         return res.status(OK).end();
     } catch (error) {
         console.log(error);

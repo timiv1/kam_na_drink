@@ -1,11 +1,11 @@
 import { bookshelf } from '@models/bookshelf'
-import { DrinkUser } from './drink_user';
-import { LocalUser } from './local_user';
+import { DrinkUser } from '@models/drink_user';
+import { BarUser } from '@models/bar_user';
 
 interface IUser {
     id: number;
-    name: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     email: string;
     password: string;
 }
@@ -15,8 +15,8 @@ const User = bookshelf.model("User", {
     drinks() {
         return this.hasMany(DrinkUser);
     },
-    locals() {
-        return this.hasMany(LocalUser);
+    bars() {
+        return this.hasMany(BarUser);
     }
 });
 
