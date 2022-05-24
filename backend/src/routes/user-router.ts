@@ -15,7 +15,7 @@ export const p = {
     delete: '/delete',
 } as const;
 const drinks: string = "/drinks";
-const locals: string = "/locals";
+const locals: string = "/bars";
 
 //Get all users 
 router.get(p.get, async (_: Request, res: Response) => {
@@ -126,7 +126,7 @@ router.delete(drinks + p.delete + "/:id", async (req: Request, res: Response) =>
     }
 });
          
-//Get all users locals.
+//Get all users bars.
  router.get(locals + p.get, async (_: Request, res: Response) => {
     try {
         const users_locals = await new BarUser().fetchAll();
