@@ -11,11 +11,9 @@ import apiRouter from './routes/api';
 import logger from 'jet-logger';
 import { CustomError } from '@shared/errors';
 
-var cors = require('cors')
 
 // Constants
 const app = express();
-app.use(cors())
 
 
 /***********************************************************************************

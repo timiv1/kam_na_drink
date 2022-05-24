@@ -6,6 +6,7 @@ import fs from 'fs-extra';
 import logger from 'jet-logger';
 import childProcess from 'child_process';
 
+
 (async () => {
     try {
         // Remove current build
