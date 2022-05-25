@@ -258,7 +258,7 @@ router.delete(p.delete+":id", async (req: Request, res: Response) => {
        
 /**
  * @swagger
- * /api/users/drinks:
+ * /api/users/drinks/all:
  *   get:
  *     summary: Returns the list of all user drinks
  *     tags: [usersdrinks]
@@ -272,7 +272,7 @@ router.delete(p.delete+":id", async (req: Request, res: Response) => {
  *               items:
  *                 $ref: '#/components/schemas/usersdrinks'
  */
- router.get('/drinks', async (_: Request, res: Response) => {
+ router.get('/drinks/all', async (_: Request, res: Response) => {
     try {
         const drinks_users = await new DrinkUser().fetchAll({});
         return res.status(OK).json({ drinks_users: drinks_users });
