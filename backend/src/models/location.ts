@@ -1,5 +1,6 @@
 import { bookshelf } from "@models/bookshelf"
 import { Bar } from "@models/bar"
+
 interface ILocation {
     id: number,
     title: string,
@@ -7,7 +8,8 @@ interface ILocation {
     post_number: number,
     city: string,
     country: string,
-    GPS_coordinates: string
+    long: number,
+    lat: number
 }
 const Location = bookshelf.model("Location", {
     tableName: 'locations',

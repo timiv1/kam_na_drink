@@ -2,7 +2,6 @@ import { bookshelf } from '@models/bookshelf'
 import { Drink } from '@models/drink';
 import { Menu } from '@models/menu';
 
-
 interface IDrinkMenu {
     id: number;
     price: number;
