@@ -10,7 +10,7 @@ const { CREATED, OK } = StatusCodes;
 
 const drink_types: string = "/drink_types";
 
-/**
+/** Drinks object
  * @swagger
  * components:
  *   schemas:
@@ -46,7 +46,7 @@ const drink_types: string = "/drink_types";
  *           description: Drink_type_id of the drink
  */
 
-/**
+/** DrinkType object
  * @swagger
  * components:
  *   schemas:
@@ -62,7 +62,7 @@ const drink_types: string = "/drink_types";
  *           description: Type of a drink
  */
 
-/**
+/** Returns the list of all drinks
  * @swagger
  * /api/drinks:
  *   get:
@@ -87,7 +87,7 @@ router.get('/', async (_: Request, res: Response) => {
     }
 });
 
-/**
+/** Returns the list of all drinks sorted by ascending price (lowest to highest)
  * @swagger
  * /api/drinks/price:
  *   get:
@@ -113,7 +113,7 @@ router.get('/price', async (_: Request, res: Response) => {
     }
 });
 
-/**
+/** Get the drink by id
  * @swagger
  * /api/drinks/{id}:
  *   get:
@@ -148,7 +148,7 @@ router.get("/:id", async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Create a new drink
  * @swagger
  * /api/drinks:
  *   post:
@@ -183,7 +183,7 @@ router.post('/', async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Update a drink
  * @swagger
  * /api/drinks/{id}:
  *   put:

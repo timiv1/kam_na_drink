@@ -3,7 +3,7 @@ import { Contact, IContact } from '@models/contact'
 
 const router = Router()
 
-/**
+/** Contact object
  * @swagger
  * components:
  *   schemas:
@@ -25,7 +25,7 @@ const router = Router()
  *           description: Contact's email
  */
 
-/**
+/** Returns the list of all contact
  * @swagger
  * /api/contacts:
  *   get:
@@ -41,7 +41,6 @@ const router = Router()
  *               items:
  *                 $ref: '#/components/schemas/contact'
  */
-
 router.get('/', async (req: Request, res: Response) => {
     try {
         const contact = await new Contact().fetchAll()
@@ -52,7 +51,7 @@ router.get('/', async (req: Request, res: Response) => {
     }
 })
 
-/**
+/** Get the contact by id
  * @swagger
  * /api/contacts/{id}:
  *   get:
@@ -77,7 +76,6 @@ router.get('/', async (req: Request, res: Response) => {
  *       404:
  *         description: The contact was not found
  */
-
 router.get('/:id', async (req: Request, res: Response) => {
     try {
         const id = req.params.id
@@ -92,8 +90,7 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 })
 
-
-/**
+/** Create a new contact
  * @swagger
  * /api/contacts:
  *   post:
@@ -115,7 +112,6 @@ router.get('/:id', async (req: Request, res: Response) => {
  *       500:
  *         description: Some server error
  */
-
 router.post('/', async (req: Request, res: Response) => {
     try {
         let data = req.body;
@@ -131,7 +127,7 @@ router.post('/', async (req: Request, res: Response) => {
 
 });
 
-/**
+/** Remove the contact entry
  * @swagger
  * /api/contacts/{id}:
  *   delete:

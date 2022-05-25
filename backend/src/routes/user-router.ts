@@ -117,7 +117,7 @@ router.get(p.get, async (_: Request, res: Response) => {
     }
 });
 
-/**
+/**Get the user by id
  * @swagger
  * /api/users/{id}:
  *   get:

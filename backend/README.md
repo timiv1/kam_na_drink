@@ -36,7 +36,14 @@ To check errors in the project and future optimizations run:
 npm run lint
 ```
 
+## Reading comments
 
+If you are bothered with beautiful swagger documentation in apis, then you can use following commands to fold/unfold comments:
+
+```
+Ctrl + K + 0 to fold all 
+Ctrl + K + J to unfold all
+```
 
 ## If Dependencies don't work properly
 
