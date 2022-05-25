@@ -3,7 +3,7 @@ import { Location, ILocation } from '@models/location'
 
 const router = Router()
 
-/**
+/** Location object
  * @swagger
  * components:
  *   schemas:
@@ -41,7 +41,7 @@ const router = Router()
  *           description: The location's GPS_coordinates
  */
 
-/**
+/** Returns the list of all location
  * @swagger
  * /api/location:
  *   get:
@@ -57,7 +57,6 @@ const router = Router()
  *               items:
  *                 $ref: '#/components/schemas/location'
  */
-
 router.get('/', async (req: Request, res: Response) => {
     try {
         const location = await new Location().fetchAll()
@@ -68,7 +67,7 @@ router.get('/', async (req: Request, res: Response) => {
     }
 })
 
-/**
+/** Get the location by id
  * @swagger
  * /api/location/{id}:
  *   get:
@@ -93,7 +92,6 @@ router.get('/', async (req: Request, res: Response) => {
  *       404:
  *         description: The location was not found
  */
-
 router.get('/:id', async (req: Request, res: Response) => {
     try {
         const id = req.params.id
@@ -108,8 +106,7 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 })
 
-
-/**
+/** Create a new location
  * @swagger
  * /api/location:
  *   post:
@@ -131,7 +128,6 @@ router.get('/:id', async (req: Request, res: Response) => {
  *       500:
  *         description: Some server error
  */
-
 router.post('/', async (req: Request, res: Response) => {
     try {
         let data = req.body;
@@ -147,7 +143,7 @@ router.post('/', async (req: Request, res: Response) => {
 
 });
 
-/**
+/** Remove the location entry
  * @swagger
  * /api/location/{id}:
  *   delete:

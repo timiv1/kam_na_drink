@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { WorkTime, IWorkTime } from '@models/workTime'
 const router = Router()
 
-/**
+/** Work_time object
  * @swagger
  * components:
  *   schemas:
@@ -28,7 +28,7 @@ const router = Router()
  *           description: closing hour
  */
 
-/**
+/** Returns the list of all work_times
  * @swagger
  * /api/work_times:
  *   get:
@@ -44,7 +44,6 @@ const router = Router()
  *               items:
  *                 $ref: '#/components/schemas/Work_time'
  */
-
 router.get('/', async (req: Request, res: Response) => {
     try {
         const workTimes = await new WorkTime().fetchAll()
@@ -55,7 +54,7 @@ router.get('/', async (req: Request, res: Response) => {
     }
 })
 
-/**
+/** Get the worktime by id
  * @swagger
  * /api/work_times/{id}:
  *   get:
@@ -80,7 +79,6 @@ router.get('/', async (req: Request, res: Response) => {
  *       404:
  *         description: The work_time was not found
  */
-
 router.get('/:id', async (req: Request, res: Response) => {
     try {
         const id = req.params.id
@@ -94,11 +92,10 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 })
 
-
 // TODO: ???
 // add work time (day hours) to bar
 
-/**
+/** Create a new work_time
  * @swagger
  * /api/work_times:
  *   post:
@@ -120,7 +117,6 @@ router.get('/:id', async (req: Request, res: Response) => {
  *       500:
  *         description: Some server error
  */
-
 router.post('/', async (req: Request, res: Response) => {
     try {
         let data = req.body;
@@ -135,7 +131,7 @@ router.post('/', async (req: Request, res: Response) => {
 
 });
 
-/**
+/** Remove the work_time entry
  * @swagger
  * /api/work_times/{id}:
  *   delete:
@@ -170,9 +166,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
     }
 });
 
-
 //TODO: ???
-
 // put worktimes for bar  work_times/1 edit worktime with id
 // delete worktime for bar  work_times/1 odstrani worktime iz worktime tabele in mapinge
 // or disable deleting until all the mapings are removed

@@ -19,7 +19,7 @@ const drinks: string = "/drinks";
 const bars: string = "/bars";
 const users: string = "/users";
 
-/**
+/** User object
  * @swagger
  * components:
  *   schemas:
@@ -49,7 +49,7 @@ const users: string = "/users";
  *           description: password of the user
  */
 
-/**
+/** UsersDrinks object
  * @swagger
  * components:
  *   schemas:
@@ -70,7 +70,7 @@ const users: string = "/users";
  *           description: User id key
  */
 
-/**
+/** UsersBar object
  * @swagger
  * components:
  *   schemas:
@@ -92,7 +92,7 @@ const users: string = "/users";
  *           description: User id key
  */
 
-/**
+/** Returns the list of all users
  * @swagger
  * /api/users:
  *   get:
@@ -152,7 +152,7 @@ router.get(p.update+":id", async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Create a new user
  * @swagger
  * /api/users:
  *   post:
@@ -187,7 +187,7 @@ router.post(p.add, async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Update a user
  * @swagger
  * /api/users/{id}:
  *   put:
@@ -223,7 +223,7 @@ router.put(p.update+":id", async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Remove the user entry
  * @swagger
  * /api/users/{id}:
  *   delete:
@@ -256,7 +256,7 @@ router.delete(p.delete+":id", async (req: Request, res: Response) => {
     }
 });
        
-/**
+/** Returns the list of all user drinks
  * @swagger
  * /api/users/drinks/all:
  *   get:
@@ -281,7 +281,7 @@ router.delete(p.delete+":id", async (req: Request, res: Response) => {
     }
 });
  
-/**
+/** Get all users drinks by user Id
  * @swagger
  * /api/users/{id}/drinks:
  *   get:
@@ -312,7 +312,7 @@ router.get('/:id' + '/drinks', async (req: Request, res: Response) => {
     return res.status(OK).json(user_drinks);
 });
          
-/**
+/** Create a user drink
  * @swagger
  * /api/users/drinks:
  *   post:
@@ -347,11 +347,11 @@ router.post('/drinks', async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Delete a user's drink
  * @swagger
  * /api/users/{id}/drinks:
  *   delete:
- *     summary: Delete a drink
+ *     summary: Delete a user's drink
  *     tags: [usersdrinks]
  *     parameters:
  *       - in: path
@@ -380,7 +380,7 @@ router.delete("/:id"+'/drinks', async (req: Request, res: Response) => {
     }
 });
          
-/**
+/** Returns the list of all user bars
  * @swagger
  * /api/users/bars:
  *   get:
@@ -405,7 +405,7 @@ router.delete("/:id"+'/drinks', async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Get all users bars by user Id
  * @swagger
  * /api/users/{id}/bars:
  *   get:
@@ -436,7 +436,7 @@ router.get("/:id"+'/bars', async (req: Request, res: Response) => {
     return res.status(OK).json(users_bars);
 });
 
-/**
+/** Create a user bar
  * @swagger
  * /api/users/bars:
  *   post:
@@ -471,12 +471,11 @@ router.post('/bars', async (req: Request, res: Response) => {
     }
 });
 
-
-/**
+/** Delete a user's bar
  * @swagger
  * /api/users/{id}/bars:
  *   delete:
- *     summary: Delete a bar
+ *     summary: Delete a user's bar
  *     tags: [userbar]
  *     parameters:
  *       - in: path
