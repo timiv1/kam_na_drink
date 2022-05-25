@@ -7,12 +7,12 @@ exports.up = function (knex) {
         table.string('password').notNullable();
     }).createTable('drinks_users', (table) => {
         table.increments('id').primary();
-        table.integer('drink_id').references('id').inTable('drinks').notNullable();;
-        table.integer('user_id').references('id').inTable('users').notNullable();;
+        table.integer('drink_id').references('id').inTable('drinks').notNullable();
+        table.integer('user_id').references('id').inTable('users').notNullable();
     }).createTable('bars_users', (table) => {
         table.increments('id').primary();
-        table.integer('bar_id').references('id').inTable('bars').notNullable();;
-        table.integer('user_id').references('id').inTable('users').notNullable();;
+        table.integer('bar_id').references('id').inTable('bars').notNullable();
+        table.integer('user_id').references('id').inTable('users').notNullable();
     });
 };
 

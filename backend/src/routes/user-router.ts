@@ -53,10 +53,9 @@ const users: string = "/users";
  * @swagger
  * components:
  *   schemas:
- *     userdrink:
+ *     usersdrinks:
  *       type: object
  *       required:
- *        - id
  *        - user_id
  *        - drink_id
  *       properties:
@@ -259,24 +258,24 @@ router.delete(p.delete+":id", async (req: Request, res: Response) => {
        
 /**
  * @swagger
- * /api/drinks/users:
+ * /api/users/drinks:
  *   get:
  *     summary: Returns the list of all user drinks
- *     tags: [userdrink]
+ *     tags: [usersdrinks]
  *     responses:
  *       200:
- *         description: The list of the drinks
+ *         description: The list of the user drinks
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/userdrink'
+ *                 $ref: '#/components/schemas/usersdrinks'
  */
- router.get(drinks + p.get, async (_: Request, res: Response) => {
+ router.get('/drinks', async (_: Request, res: Response) => {
     try {
-        const users_drinks = await new DrinkUser().fetchAll();
-        return res.status(OK).json({ user_drinks: users_drinks });
+        const drinks_users = await new DrinkUser().fetchAll({});
+        return res.status(OK).json({ drinks_users: drinks_users });
     } catch (error) {
         console.log(error);
     }
@@ -284,17 +283,17 @@ router.delete(p.delete+":id", async (req: Request, res: Response) => {
  
 /**
  * @swagger
- * /api/drinks/users/{id}:
+ * /api/users/{id}/drinks:
  *   get:
- *     summary: Get all users drinks by userId
+ *     summary: Get all users drinks by user Id
  *     parameters:
  *      - in: path
  *        name: id
  *        schema:
  *          type: integer
  *        required: true
- *        description: All users drinks by userId
- *     tags: [userdrink]
+ *        description: All users drinks by user Id
+ *     tags: [usersdrinks]
  *     responses:
  *       200:
  *         description: drink by id
@@ -303,39 +302,39 @@ router.delete(p.delete+":id", async (req: Request, res: Response) => {
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/userdrink'
+ *                 $ref: '#/components/schemas/usersdrinks'
  *       404:
- *         description: The drink was not found
+ *         description: The user drink was not found
  */
-router.get(drinks + ":id", async (req: Request, res: Response) => {
+router.get('/:id' + '/drinks', async (req: Request, res: Response) => {
     const id = req.params.id
-    const user_drinks = await new DrinkUser().where({ userId: id }).fetchAll({ withRelated: "drinks" });
+    const user_drinks = await new DrinkUser().where({ user_id: id }).fetchAll({});
     return res.status(OK).json(user_drinks);
 });
          
 /**
  * @swagger
- * /api/drinks/users:
+ * /api/users/drinks:
  *   post:
  *     summary: Create a user drink
- *     tags: [userdrink]
+ *     tags: [usersdrinks]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/userdrink'
+ *             $ref: '#/components/schemas/usersdrinks'
  *     responses:
  *       200:
  *         description: The User drink was successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/userdrink'
+ *               $ref: '#/components/schemas/usersdrinks'
  *       500:
  *         description: Some server error
  */
-router.post(users + p.add, async (req: Request, res: Response) => {
+router.post('/drinks', async (req: Request, res: Response) => {
     try {
         let newUser: IDrinkUser = req.body;
         if (!newUser) {
@@ -350,27 +349,25 @@ router.post(users + p.add, async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /api/drinks/users/{id}:
- *   put:
+ * /api/users/{id}/drinks:
+ *   delete:
  *     summary: Delete a drink
- *     tags: [userdrink]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/userdrink'
+ *     tags: [usersdrinks]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user id
+ * 
  *     responses:
  *       200:
- *         description: The user drink was successfully updated
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/userdrink'
- *       500:
- *         description: Some server error
+ *         description: The user drink was deleted
+ *       404:
+ *         description: The user drink was not found
  */
-router.delete(drinks + p.delete + ":id", async (req: Request, res: Response) => {
+router.delete("/:id"+'/drinks', async (req: Request, res: Response) => {
     try {
         const id = req.params.id
         if (!id) {
@@ -385,7 +382,7 @@ router.delete(drinks + p.delete + ":id", async (req: Request, res: Response) => 
          
 /**
  * @swagger
- * /api/drinks/bars:
+ * /api/users/bars:
  *   get:
  *     summary: Returns the list of all user bars
  *     tags: [userbar]
@@ -401,8 +398,8 @@ router.delete(drinks + p.delete + ":id", async (req: Request, res: Response) => 
  */
  router.get('/bars', async (_: Request, res: Response) => {
     try {
-        const users_bars = await new BarUser().fetchAll({});
-        return res.status(OK).json({ user_bars: users_bars });
+        const bars_users = await new BarUser().fetchAll({});
+        return res.status(OK).json({ bars_users: bars_users });
     } catch (error) {
         console.log(error);
     }
@@ -410,16 +407,16 @@ router.delete(drinks + p.delete + ":id", async (req: Request, res: Response) => 
 
 /**
  * @swagger
- * /api/drinks/bars/{id}:
+ * /api/users/{id}/bars:
  *   get:
- *     summary: Get all users bars by userId
+ *     summary: Get all users bars by user Id
  *     parameters:
  *      - in: path
  *        name: id
  *        schema:
  *          type: integer
  *        required: true
- *        description: All users bars by userId
+ *        description: All users bars by user Id
  *     tags: [userbar]
  *     responses:
  *       200:
@@ -433,15 +430,15 @@ router.delete(drinks + p.delete + ":id", async (req: Request, res: Response) => 
  *       404:
  *         description: The user bar was not found
  */
-router.get(bars + p.get + "/:id", async (req: Request, res: Response) => {
+router.get("/:id"+'/bars', async (req: Request, res: Response) => {
     const id = req.params.id
-    const users_bars = await new BarUser().where({ userId: id }).fetchAll({ withRelated: "bars" });
+    const users_bars = await new BarUser().where({ user_id: id }).fetchAll({ });
     return res.status(OK).json(users_bars);
 });
 
 /**
  * @swagger
- * /api/drinks/bars:
+ * /api/users/bars:
  *   post:
  *     summary: Create a user bar
  *     tags: [userbar]
@@ -461,7 +458,7 @@ router.get(bars + p.get + "/:id", async (req: Request, res: Response) => {
  *       500:
  *         description: Some server error
  */
-router.post(bars + p.add, async (req: Request, res: Response) => {
+router.post('/bars', async (req: Request, res: Response) => {
     try {
         let newUserBar: IDrinkUser = req.body;
         if (!newUserBar) {
@@ -477,27 +474,25 @@ router.post(bars + p.add, async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /api/drinks/bars/{id}:
- *   put:
- *     summary: Update a bar
+ * /api/users/{id}/bars:
+ *   delete:
+ *     summary: Delete a bar
  *     tags: [userbar]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/userbar'
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user id
+ * 
  *     responses:
  *       200:
- *         description: The user bar was successfully updated
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/userbar'
- *       500:
- *         description: Some server error
+ *         description: The user bar was deleted
+ *       404:
+ *         description: The user bar was not found
  */
-router.delete(bars + p.delete + ":id", async (req: Request, res: Response) => {
+router.delete("/:id"+'/bars', async (req: Request, res: Response) => {
     try {
         const id = req.params.id
         if (!id) {

@@ -1,6 +1,5 @@
 import { bookshelf } from "@models/bookshelf";
 import { Bar } from "@models/bar"
-import { WorkTimeBar } from "./work_time_bar";
 
 interface IWorkTime {
     id: number,
