@@ -1,8 +1,8 @@
 # Frontend ionic-vue
 
-## Commands
+> **_NOTE:_** You need to add .env file to frontend folder according to .env.example and change secret keys.
 
-> **_NOTE:_** you need to add .env file according to .env.example and change secret keys
+## Commands
 
 Globally install ionic-vue:
 
