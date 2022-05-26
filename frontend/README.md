@@ -2,6 +2,8 @@
 
 ## Commands
 
+> **_NOTE:_** you need to add .env file according to .env.example and change secret keys
+
 Globally install ionic-vue:
 
 ```
