@@ -1,8 +1,6 @@
-import './pre-start'; // Must be the first import
+import './pre-start';
 import logger from 'jet-logger';
 import server from './server';
-
-const cors = require('cors');
 
 // Constants
 const serverStartMsg = 'Express server started on port: ',
