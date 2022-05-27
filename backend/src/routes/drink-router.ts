@@ -10,7 +10,7 @@ const { CREATED, OK } = StatusCodes;
 
 const drink_types: string = "/drink_types";
 
-/**
+/** Drinks object
  * @swagger
  * components:
  *   schemas:
@@ -46,7 +46,7 @@ const drink_types: string = "/drink_types";
  *           description: Drink_type_id of the drink
  */
 
-/**
+/** DrinkType object
  * @swagger
  * components:
  *   schemas:
@@ -62,7 +62,7 @@ const drink_types: string = "/drink_types";
  *           description: Type of a drink
  */
 
-/**
+/** Returns the list of all drinks
  * @swagger
  * /api/drinks:
  *   get:
@@ -87,7 +87,7 @@ router.get('/', async (_: Request, res: Response) => {
     }
 });
 
-/**
+/** Returns the list of all drinks sorted by ascending price (lowest to highest)
  * @swagger
  * /api/drinks/price:
  *   get:
@@ -113,7 +113,7 @@ router.get('/price', async (_: Request, res: Response) => {
     }
 });
 
-/**
+/** Get the drink by id
  * @swagger
  * /api/drinks/{id}:
  *   get:
@@ -148,7 +148,7 @@ router.get("/:id", async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Create a new drink
  * @swagger
  * /api/drinks:
  *   post:
@@ -183,7 +183,7 @@ router.post('/', async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Update a drink
  * @swagger
  * /api/drinks/{id}:
  *   put:
@@ -219,7 +219,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Remove the drinks entry
  * @swagger
  * /api/drinks/{id}:
  *   delete:
@@ -252,10 +252,9 @@ router.delete("/:id", async (req: Request, res: Response) => {
     }
 });
 
-//TODO: ??? Nevem men ne gre klicat posamezno tega API-ja, vendar ga pa pokaže pri /get/drinks
-/**
+/** Returns the list of drink types
  * @swagger
- * /api/drinks/types:
+ * /api/drinks/types/all:
  *   get:
  *     summary: Returns the list of drink types
  *     tags: [drinktype]
@@ -271,7 +270,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
  *       500:
  *         description: Some server error
  */
-router.get('/types', async (_: Request, res: Response) => {
+router.get('/types/all', async (_: Request, res: Response) => {
     try {
         const drink_types = await new DrinkType().fetchAll({ withRelated: "drinks" });
         return res.status(OK).json(drink_types);
@@ -280,7 +279,7 @@ router.get('/types', async (_: Request, res: Response) => {
     }
 });
 
-/**
+/** Create a new drink type
  * @swagger
  * /api/drinks/types:
  *   post:
@@ -315,7 +314,7 @@ router.post('/types', async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Update a drink type
  * @swagger
  * /api/drinks/types/{id}:
  *   put:
@@ -351,7 +350,7 @@ router.put('/types/:id', async (req: Request, res: Response) => {
     }
 });
 
-/**
+/** Remove the drink type entry
  * @swagger
  * /api/drinks/types/{id}:
  *   delete:

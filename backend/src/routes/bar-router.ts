@@ -2,9 +2,10 @@ import { Router, Request, Response } from 'express';
 import { Bar, IBar } from '@models/bar'
 import { WorkTimeBar, IWorkTimeBar } from '@models/work_time_bar'
 
+var cors = require('cors')
 const router = Router();
 
-/**
+/** Bar object
  * @swagger
  * components:
  *   schemas:
@@ -31,7 +32,7 @@ const router = Router();
  *           description: Contact_id of the bar
  */
 
-/**
+/** Work_time_bar object
  * @swagger
  * components:
  *   schemas:
@@ -49,7 +50,7 @@ const router = Router();
  *           description: id of work_time
  */
 
-/**
+/** Returns the list of all bars
  * @swagger
  * /api/bars:
  *   get:
@@ -75,7 +76,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-/**
+/** Get the bar by id
  * @swagger
  * /api/bars/{id}:
  *   get:
@@ -112,7 +113,7 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-/**
+/** Get the work_time by bar_id
  * @swagger
  * /api/bars/{id}/work_time:
  *   get:
@@ -152,7 +153,7 @@ router.get('/:id/work_time', async (req: Request, res: Response) => {
   }
 });
 
-/**
+/** Create a new Bar
  * @swagger
  * /api/bars:
  *   post:
@@ -187,11 +188,11 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-/**
+/** Connect work_time to bar
  * @swagger
  * /api/bars/{id}/work_time:
  *   post:
- *     summary: connect work_time to bar
+ *     summary: Connect work_time to bar
  *     tags: [Bars]
  *     parameters:
  *      - in: path
@@ -217,9 +218,7 @@ router.post('/', async (req: Request, res: Response) => {
  *         description: Some server error
  */
 
-
 //TODO: ???
-
 // get worktimes for bar  bar/1/work_times
 // put worktimes for bar  bar/1/work_times/1 add worktime to bar
 // delete worktimes for bar  bar/1/work_times odstrani worktime maping
@@ -241,7 +240,7 @@ router.post('/:id/work_time', async (req: Request, res: Response) => {
 
 });
 
-/**
+/** Update the bar by the id
  * @swagger
  * /api/bars/{id}:
  *  put:
@@ -287,11 +286,11 @@ router.put("/:id", async (req: Request, res: Response) => {
   }
 });
 
-/**
+/** Delete connection between work_time and Bar
  * @swagger
  * /api/bars/{barId}/work_time/{workTimeBarId}:
  *   delete:
- *     summary: delete connection between work_time and Bar
+ *     summary: Delete connection between work_time and Bar
  *     tags: [Bars]
  *     parameters:
  *      - in: path
@@ -316,8 +315,7 @@ router.put("/:id", async (req: Request, res: Response) => {
  *       500:
  *         description: Some server error
  */
-
-// TODO:??? delete worktimes for bar  bar/1/work_times odstrani worktime maping
+// TODO:??? delete worktimes for bar bar/1/work_times odstrani worktime maping
 router.delete('/:barId/work_time/:workTimeBarId', async (req: Request, res: Response) => {
   try {
     const barId = req.params.barId //???
@@ -333,10 +331,9 @@ router.delete('/:barId/work_time/:workTimeBarId', async (req: Request, res: Resp
     console.log(error)
     return res.status(500).send(error)
   }
-
 });
 
-/**
+/** Remove the bar by id
  * @swagger
  * /api/bars/{id}:
  *   delete:

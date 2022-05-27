@@ -1,7 +1,6 @@
-NE DELAJO:
-drinktype - GET /api/drinks/types
-userdrink - Vsi API-ji
-userbar - Vsi API-ji
+TODO:
+GET/POST/PUT/DELETE
+Če vneseš id ki ne obstaja -> se more naredit exception in aplikacija ne sme crknat lol
 
 TODO: Potrebno bo poenotit vse PUTE - lahko naredimo tako kot pri PUT Bars (da imaš input field za vnesit in pol v bodyju vse ostale parametre)
 ali pa pač tako kot je pri vseh ostalih putih(da v bodyju vnesemo vse)
@@ -14,12 +13,11 @@ TODO: API /api/bars/{id}/work_time je edini, ki ima Id autoincrement, pri ostali
 
 TODO: Potrebno poenotit vse route pathe v API-jih
 
-TODO:
-GET/POST/PUT/DELETE
-Če vneseš id ki ne obstaja -> se more naredit exception in aplikacija ne sme crknat lol
+
+
+
 
 TODO: Kriptiranje Passwordov
-
 TODO: JWT / Auth0 -> pač ne vem men se zdele ne da s tem jebat, bomo naredil kasnej
-
-TODO: Cors ( Ubistvu že mam na enem sklopu apijev implementan, je treba še samo na ostalih dodat v argumente v API-ju)
+TODO: Cors -> trenutno je nastavljeno na vse ( * )
+- na koncu samo whitelistamo trenutne naslove -> dodamo optionse?

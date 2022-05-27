@@ -11,7 +11,8 @@ exports.up = function (knex) {
     table.string("city").notNullable();
     table.integer("post_number").notNullable();
     table.string("country").notNullable();
-    table.string("GPS_coordinates").notNullable();
+    table.integer("long").notNullable();
+    table.integer("lat").notNullable();
   });
 };
 
