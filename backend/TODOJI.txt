@@ -21,4 +21,5 @@ TODO: Kriptiranje Passwordov
 
 TODO: JWT / Auth0 -> pač ne vem men se zdele ne da s tem jebat, bomo naredil kasnej
 
-TODO: Cors ( Ubistvu že mam na enem sklopu apijev implementan, je treba še samo na ostalih dodat v argumente v API-ju)
+TODO: Cors -> trenutno je nastavljeno na vse ( * )
+- na koncu samo whitelistamo trenutne naslove -> dodamo optionse?

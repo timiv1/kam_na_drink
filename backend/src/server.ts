@@ -14,9 +14,12 @@ import { CustomError } from '@shared/errors';
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
+var cors = require('cors')
+
+
 // Constants
 const app = express();
-
+app.use(cors())
 
 /***********************************************************************************
  *                                  Middlewares
