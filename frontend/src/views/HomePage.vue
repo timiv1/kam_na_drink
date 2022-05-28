@@ -6,16 +6,28 @@
         <ion-col size="12">
           <capacitor-google-map id="map"></capacitor-google-map>
         </ion-col>
+        <ion-col size="12">
+          <ion-button
+            @click="naZdravje(1)"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            nazdravi
+          </ion-button></ion-col
+        >
       </ion-row>
     </ion-grid>
   </base-page>
 </template>
 <script lang="ts">
+import { mapActions } from "vuex";
+
 import { GoogleMap } from "@capacitor/google-maps";
 
 import BasePage from "../components/BasePage.vue";
 import { defineComponent } from "vue";
-import { IonGrid, IonRow, IonCol } from "@ionic/vue";
+import { IonGrid, IonRow, IonCol, IonButton } from "@ionic/vue";
 
 export default defineComponent({
   name: "HomePage",
@@ -24,6 +36,7 @@ export default defineComponent({
     IonRow,
     IonCol,
     BasePage,
+    IonButton,
   },
   async ionViewDidEnter() {
     await this.setupMap();
@@ -50,6 +63,7 @@ export default defineComponent({
         return { theMap };
       }
     },
+    ...mapActions("auth", ["naZdravje"]),
   },
 });
 </script>
@@ -59,4 +73,5 @@ capacitor-google-map {
   width: 100%;
   height: 400px;
 }
+
 </style>

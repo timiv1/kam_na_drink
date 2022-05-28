@@ -24,12 +24,13 @@ import '@ionic/vue/css/display.css';
 import './theme/variables.css';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
+import { store } from './store'
 // Call the element loader after the platform has been bootstrapped
 defineCustomElements(window);
 const app = createApp(App)
   .use(IonicVue)
-  .use(router);
-
+  .use(router)
+  .use(store);
 router.isReady().then(() => {
   app.mount('#app');
 });
