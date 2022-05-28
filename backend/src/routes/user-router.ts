@@ -4,6 +4,7 @@ import { ParamMissingError } from '@shared/errors';
 import { User, IUser } from '@models/user';
 import { DrinkUser, IDrinkUser } from '@models/drink_user';
 import { BarUser } from '@models/bar_user';
+import extractJWT from 'src/middleware/extractJWT';
 
 const router = Router();
 const { CREATED, OK } = StatusCodes;
@@ -14,10 +15,6 @@ export const p = {
     update: '/',
     delete: '/',
 } as const;
-
-const drinks: string = "/drinks";
-const bars: string = "/bars";
-const users: string = "/users";
 
 /** User object
  * @swagger
@@ -272,7 +269,7 @@ router.delete(p.delete + ":id", async (req: Request, res: Response) => {
  *               items:
  *                 $ref: '#/components/schemas/usersdrinks'
  */
- router.get('/drinks/all', async (_: Request, res: Response) => {
+ router.get('/drinks/all', extractJWT, async (_: Request, res: Response) => {
     try {
         const drinks_users = await new DrinkUser().fetchAll({});
         return res.status(OK).json({ drinks_users: drinks_users });
@@ -505,4 +502,4 @@ router.delete("/:id" + '/bars', async (req: Request, res: Response) => {
 });
 
 // Export default
-export default router;
+export default router

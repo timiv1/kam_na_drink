@@ -15,9 +15,6 @@ TODO: Potrebno poenotit vse route pathe v API-jih
 
 
 
-
-
-TODO: Kriptiranje Passwordov
-TODO: JWT / Auth0 -> pač ne vem men se zdele ne da s tem jebat, bomo naredil kasnej
+TODO: UI: JWT 
 TODO: Cors -> trenutno je nastavljeno na vse ( * )
-- na koncu samo whitelistamo trenutne naslove -> dodamo optionse?
+    - na koncu samo whitelistamo trenutne naslove -> dodamo optionse?
