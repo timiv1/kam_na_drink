@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { Location, ILocation } from '@models/location'
+import { Location } from '@models/location'
+import PythagorasEquirectangular from 'src/functions/pythagorasHelper';
 
 const router = Router()
 
@@ -215,31 +216,28 @@ router.delete("/:id", async (req: Request, res: Response) => {
  *         description: The location was not found
  */
  router.get('/:lat' + '/:long', async (req: Request, res: Response) => {      
+    
     try {        
     NearestCity(parseInt(req.params.lat), parseInt(req.params.long));    
-    async function NearestCity(latitude: any, longitude: any) {
-    const locationsJSON = await new Location().fetchAll()     
-        
-    const x = locationsJSON.toJSON();
-    const result = x.map(Object.values);
 
-    var minDif = Number.MAX_SAFE_INTEGER;
-    let closest: any;
+    async function NearestCity(latitude: any, longitude: any) {
+    const locations = await new Location().fetchAll()     
+        
+    const locationsJSON = locations.toJSON();
+    const result = locationsJSON.map(Object.values);
 
     for (let index = 0; index < result.length; ++index) {
-      var dif = PythagorasEquirectangular(latitude, longitude, result[index][6], result[index][7]);
-      if (dif < minDif) {
-        closest = index;
-        minDif = dif;
-      }
-    }  
-        //We return lat and long of the closest location
-        var lat = result[closest][6];
-        var long = result[closest][7];
+      var dif = PythagorasEquirectangular.PythagorasEquirectangular(latitude, longitude, result[index][6], result[index][7]);
+      result[index].push(dif)
+    } 
 
-        return res.status(200).send({latitude: lat, longitude: long});    
-        //return res.status(200).send(result);
-    }   
+    let citiesSortedByAsc = result.sort((a: any, b: any) => a[8] - b[8])
+
+    //TODO: ok tole morm fixat in the near future :D    
+    //dodat bom mogu key-e za vsak value pa to pretvorit v JSON
+    //zdej je [[],[]] -> {{key:value},{key:value}}
+    return res.status(200).send(citiesSortedByAsc);   
+}  
     } catch (error: any) {
         console.log(error)
         if (error?.message === "EmptyResponse")
@@ -248,23 +246,5 @@ router.delete("/:id", async (req: Request, res: Response) => {
             return res.status(500).send(error)
     }
 })
-
-// Calculate from Degrees to Radians
-function Deg2Rad(deg: any) {
-    return deg * Math.PI / 180;
-}
-
-// Calculate Pythagoras equation
-function PythagorasEquirectangular(lat1: any, lon1: any, lat2: any, lon2: any) {
-    lat1 = Deg2Rad(lat1);
-    lat2 = Deg2Rad(lat2);
-    lon1 = Deg2Rad(lon1);
-    lon2 = Deg2Rad(lon2);
-    var R = 6371; // km
-    var x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
-    var y = (lat2 - lat1);
-    var d = Math.sqrt(x * x + y * y) * R;
-    return d;
-}
 
 export default router
