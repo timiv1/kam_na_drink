@@ -63,7 +63,6 @@ export const p = {
  */
  router.get('/validateToken', extractJWT, async (req: Request, res: Response, next: NextFunction) => {
      logging.info(NAMESPACE, 'Token validated, user authorized.');
- 
      return res.status(200).json({
          message: 'Token(s) validated'
      });
@@ -91,7 +90,7 @@ export const p = {
  *       500:
  *         description: Some server error
  */
- router.post('/register', async (req: Request, res: Response, next: NextFunction) => {
+ router.post('/register', async (req: Request, res: Response) => {
      let { password } = req.body;
      bcryptjs.hash(password, 10, async (hashError, hash) => {
          if (hashError) {
@@ -147,20 +146,20 @@ export const p = {
  *         description: Some server error
  */
 
- router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
+ router.post('/login', async (req: Request, res: Response) => {
     let password = req.body.password; 
-    const first_name = req.body.first_name
+    let email = req.body.email
 
-    const usersx = await new User().where({ first_name: first_name }).fetchAll();
-    const users = usersx.toJSON();
+    const users = await new User().where({ email: email }).fetchAll();
+    const usersJSON = users.toJSON();
 
-    bcryptjs.compare(password, users[0].password, (error, result) => {
-        if (error) {
+    await bcryptjs.compare(password, usersJSON[0].password, (error, result) => {
+        if (result.valueOf() === false || result.valueOf() === null) {
             return res.status(401).json({
                 message: 'Password Mismatch'
             });
         } else if (result) {
-            signJWT(users[0], (_error, token) => {
+            signJWT(usersJSON[0], (_error, token) => {
                 if (_error) {
                     return res.status(401).json({
                         message: 'Unable to Sign JWT',
@@ -170,11 +169,11 @@ export const p = {
                     return res.status(200).json({
                         message: 'Auth Successful',
                         token,
-                        user: users[0]
+                        user: usersJSON[0]
                     });
                 }
             });
-        }
+        }       
     });
 });
 
