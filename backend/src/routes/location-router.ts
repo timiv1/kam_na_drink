@@ -232,11 +232,17 @@ router.delete("/:id", async (req: Request, res: Response) => {
     } 
 
     let citiesSortedByAsc = result.sort((a: any, b: any) => a[8] - b[8])
+    var arrCitiesSorted: { id: Number; title: String; lat: Number; long: Number; distance: Number; }[] = []
 
-    //TODO: ok tole morm fixat in the near future :D    
-    //dodat bom mogu key-e za vsak value pa to pretvorit v JSON
-    //zdej je [[],[]] -> {{key:value},{key:value}}
-    return res.status(200).send(citiesSortedByAsc);   
+    citiesSortedByAsc.forEach((element: any[]) => {
+        arrCitiesSorted.push({'id':element[0],
+         'title':element[1],
+         'lat':element[6],
+         'long':element[7],
+         'distance':element[8]})
+    });
+
+    return res.status(200).send(arrCitiesSorted);   
 }  
     } catch (error: any) {
         console.log(error)

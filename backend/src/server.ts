@@ -81,9 +81,6 @@ const options = {
           }
       }
     },
-    security: [{
-        bearerAuth: []
-    }]
     },
     servers: [
       {
