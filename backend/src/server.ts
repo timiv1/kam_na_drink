@@ -13,9 +13,7 @@ import { CustomError } from '@shared/errors';
 
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-
 var cors = require('cors')
-
 
 // Constants
 const app = express();
@@ -74,6 +72,15 @@ const options = {
         name: 'MIT',
         url: 'https://spdx.org/licenses/MIT.html',
       },
+    components: {
+      securitySchemes: {
+          bearerAuth: {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT',
+          }
+      }
+    },
     },
     servers: [
       {
@@ -84,25 +91,12 @@ const options = {
   apis: ['./src/routes/*'],
 };
 
-const specs = swaggerJsdoc(options);
+//const specs = swaggerJsdoc(options);
+//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+const specs = (swaggerJsdoc(options));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-/***********************************************************************************
- *                                  Front-end content
- **********************************************************************************/
-
-// Set views dir
-const viewsDir = path.join(__dirname, 'views');
-app.set('views', viewsDir);
-
-// Set static dir
-const staticDir = path.join(__dirname, 'public');
-app.use(express.static(staticDir));
-
-// Serve index.html file
-app.get('*', (_: Request, res: Response) => {
-    res.sendFile('index.html', {root: viewsDir});
-});
 
 // Export here and start in a diff file (for testing).
 export default app;

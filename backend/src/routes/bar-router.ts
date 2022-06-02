@@ -1,9 +1,14 @@
 import { Router, Request, Response } from 'express';
-import { Bar, IBar } from '@models/bar'
-import { WorkTimeBar, IWorkTimeBar } from '@models/work_time_bar'
+import { Bar } from '@models/bar'
+import { WorkTimeBar } from '@models/work_time_bar'
+import { IBar } from '@models/schema_definitions'
+import _schema from '@shared/_schema';
+import validateBody from 'src/middleware/validateBody';
 
 var cors = require('cors')
 const router = Router();
+
+type RequestBody<T> = Request<{}, {}, T>;
 
 /** Bar object
  * @swagger
@@ -21,9 +26,26 @@ const router = Router();
  *         name:
  *           type: string
  *           description: Name of the bar
- *         menu_id:
+ *         location_id:
  *           type: number
- *           description: Menu_id of the bar
+ *           description: Location_id of the bar
+ *         contact_id:
+ *           type: number
+ *           description: Contact_id of the bar
+ */
+
+/** BarPost object
+ * @swagger
+ * components:
+ *   schemas:
+ *     BarPost:
+ *       type: object
+ *       required:
+ *         - name
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: Name of the bar
  *         location_id:
  *           type: number
  *           description: Location_id of the bar
@@ -44,7 +66,7 @@ const router = Router();
  *       properties:
  *         bar_id:
  *           type: integer
- *           description: id of Bra
+ *           description: id of Bar
  *         work_time_id:
  *           type: integer
  *           description: id of work_time
@@ -66,13 +88,15 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/Bar'
  */
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (_: Request, res: Response) => {
   try {
-    const bars = await new Bar().fetchAll({ withRelated: "menu" })
+    const bars = await new Bar().fetchAll({ withRelated: "location" })
     return res.status(200).send(bars)
-  } catch (err) {
-    console.log(err)
-    res.status(500).send(err)
+  } catch (error) {
+    if (error.message === "EmptyResponse")
+      return res.sendStatus(404)
+    else
+      return res.status(500).send(error)
   }
 });
 
@@ -102,14 +126,14 @@ router.get('/', async (req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id
-    const bar = await new Bar({ id }).fetch()
+    const bar = await new Bar({ id }).fetch({ withRelated: ["location", "contact", "work_times_bars.workTime"] })
     console.log('bar')
     return res.status(200).send(bar)
-  } catch (err: any) {
-    if (err?.message === "EmptyResponse")
+  } catch (error) {
+    if (error.message === "EmptyResponse")
       return res.sendStatus(404)
     else
-      return res.status(500).send(err)
+      return res.status(500).send(error)
   }
 });
 
@@ -144,12 +168,12 @@ router.get('/:id/work_time', async (req: Request, res: Response) => {
     )
     console.log('bar')
     return res.status(200).send(workTimeBar)
-  } catch (err: any) {
-    console.log(err)
-    if (err?.message === "EmptyResponse")
+  } catch (error) {
+    console.log(error)
+    if (error.message === "EmptyResponse")
       return res.sendStatus(404)
     else
-      return res.status(500).send(err)
+      return res.status(500).send(error)
   }
 });
 
@@ -157,50 +181,46 @@ router.get('/:id/work_time', async (req: Request, res: Response) => {
  * @swagger
  * /api/bars:
  *   post:
- *     summary: Create a new Bar
+ *     summary: Create a new bar
  *     tags: [Bars]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Bar'
+ *             $ref: '#/components/schemas/BarPost'
  *     responses:
  *       200:
  *         description: The Bar was successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Bar'
+ *               $ref: '#/components/schemas/BarPost'
  *       500:
  *         description: Some server error
  */
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', validateBody(_schema.IBar), async (req: RequestBody<IBar>, res: Response) => {
   try {
-    let data = req.body;
-    if (!data) {
-      return res.status(500).send("missing parameter")
-    }
-    const newBar = await new Bar().save(data);
+    const newBar = await new Bar().save({
+      name: req.body.name,
+      location_id: req.body.location_id,
+      contact_id: req.body.contact_id
+    });
     return res.status(200).json(newBar);
   } catch (error) {
-    return res.status(500).send(error)
+    if (error.message === "EmptyResponse")
+      return res.sendStatus(404)
+    else
+      return res.status(500).send(error)
   }
 });
 
 /** Connect work_time to bar
  * @swagger
- * /api/bars/{id}/work_time:
+ * /api/bars/barworktime:
  *   post:
  *     summary: Connect work_time to bar
  *     tags: [Bars]
- *     parameters:
- *      - in: path
- *        name: id
- *        schema:
- *          type: integer
- *        required: true
- *        description: The bar id
  *     requestBody:
  *       required: true
  *       content:
@@ -217,25 +237,20 @@ router.post('/', async (req: Request, res: Response) => {
  *       500:
  *         description: Some server error
  */
-
-//TODO: ???
-// get worktimes for bar  bar/1/work_times
-// put worktimes for bar  bar/1/work_times/1 add worktime to bar
-// delete worktimes for bar  bar/1/work_times odstrani worktime maping
-router.post('/:id/work_time', async (req: Request, res: Response) => {
+router.post('/barworktime', async (req: Request, res: Response) => {
   try {
-    const id = req.params.id //???
-    let data: IWorkTimeBar = req.body;
+    let data = req.body;
     if (!data) {
       return res.status(500).send("missing parameter")
     }
     const workTimeBar = await new WorkTimeBar().save(data);
     console.log(workTimeBar)
     return res.status(200).json(workTimeBar);
-    // res.sendStatus(200)
   } catch (error) {
-    console.log(error)
-    return res.status(500).send(error)
+    if (error.message === "EmptyResponse")
+      return res.sendStatus(404)
+    else
+      return res.status(500).send(error)
   }
 
 });
@@ -258,14 +273,14 @@ router.post('/:id/work_time', async (req: Request, res: Response) => {
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Bar'
+ *            $ref: '#/components/schemas/BarPost'
  *    responses:
  *      200:
  *        description: The Bar was updated
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Bar'
+ *              $ref: '#/components/schemas/BarPost'
  *      404:
  *        description: The Bar was not found
  *      500:
@@ -273,7 +288,7 @@ router.post('/:id/work_time', async (req: Request, res: Response) => {
  */
 router.put("/:id", async (req: Request, res: Response) => {
   try {
-    const updatedBar: IBar = req.body;
+    const updatedBar = req.body;
     const id = req.params.id
     if (!updatedBar) {
       return res.status(500).send("missing parameter")
@@ -281,16 +296,18 @@ router.put("/:id", async (req: Request, res: Response) => {
     const newEntry = await new Bar({ id }).save(updatedBar);
     return res.status(200).json(newEntry);
   } catch (error) {
-    console.log(error)
-    return res.status(500).send(error)
+    if (error.message === "EmptyResponse")
+      return res.sendStatus(404)
+    else
+      return res.status(500).send(error)
   }
 });
 
-/** Delete connection between work_time and Bar
+/** Delete connection between work_time and bar
  * @swagger
  * /api/bars/{barId}/work_time/{workTimeBarId}:
  *   delete:
- *     summary: Delete connection between work_time and Bar
+ *     summary: Delete connection between work_time and bar
  *     tags: [Bars]
  *     parameters:
  *      - in: path
@@ -320,16 +337,17 @@ router.delete('/:barId/work_time/:workTimeBarId', async (req: Request, res: Resp
   try {
     const barId = req.params.barId //???
     const id = req.params.workTimeBarId
-    let data: IWorkTimeBar = req.body;
+    let data = req.body;
     if (!data) {
       return res.status(500).send("missing parameter")
     }
     const workTimeBar = await new WorkTimeBar({ id }).destroy()
     return res.status(200).json(workTimeBar);
-    // res.sendStatus(200)
   } catch (error) {
-    console.log(error)
-    return res.status(500).send(error)
+    if (error.message === "EmptyResponse")
+      return res.sendStatus(404)
+    else
+      return res.status(500).send(error)
   }
 });
 
@@ -363,7 +381,10 @@ router.delete("/:id", async (req: Request, res: Response) => {
     await new Bar({ id }).destroy()
     return res.sendStatus(200)
   } catch (error) {
-    return res.status(500).send(error)
+    if (error.message === "EmptyResponse")
+      return res.sendStatus(404)
+    else
+      return res.status(500).send(error)
   }
 });
 

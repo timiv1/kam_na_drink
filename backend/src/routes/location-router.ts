@@ -1,7 +1,13 @@
 import { Router, Request, Response } from 'express';
-import { Location, ILocation } from '@models/location'
+import { Location } from '@models/location'
+import PythagorasEquirectangular from 'src/functions/pythagorasHelper';
+import { ILocation } from '@models/schema_definitions'
+import _schema from '@shared/_schema';
+import validateBody from 'src/middleware/validateBody';
 
 const router = Router()
+
+type RequestBody<T> = Request<{}, {}, T>;
 
 /** Location object
  * @swagger
@@ -11,7 +17,6 @@ const router = Router()
  *       type: object
  *       required:
  *         - id
- *         - title
  *         - street
  *         - post_number
  *         - city
@@ -22,9 +27,6 @@ const router = Router()
  *         id:
  *           type: integer
  *           description: The auto-generated id of the location
- *         title:
- *           type: string
- *           description: The location's title
  *         street:
  *           type: string
  *           description: The location's street
@@ -45,15 +47,50 @@ const router = Router()
  *           description: The location's latitude's value
  */
 
-/** Returns the list of all location
+/** LocationPost object
+ * @swagger
+ * components:
+ *   schemas:
+ *     LocationPost:
+ *       type: object
+ *       required:
+ *         - street
+ *         - post_number
+ *         - city
+ *         - country
+ *         - long
+ *         - lat
+ *       properties:
+ *         street:
+ *           type: string
+ *           description: The location's street
+ *         post_number:
+ *           type: integer
+ *           description: The location's post_number
+ *         city:
+ *           type: string
+ *           description: The location's city
+ *         country:
+ *           type: string
+ *           description: The location's country
+ *         long:
+ *           type: number
+ *           description: The location's longitude's value
+ *         lat:
+ *           type: number
+ *           description: The location's latitude's value
+ */
+
+
+/** Returns the list of all locations
  * @swagger
  * /api/location:
  *   get:
  *     summary: Returns the list of all location
- *     tags: [location]
+ *     tags: [Locations]
  *     responses:
  *       200:
- *         description: The list of the location
+ *         description: The list of the locations
  *         content:
  *           application/json:
  *             schema:
@@ -67,8 +104,10 @@ router.get('/', async (req: Request, res: Response) => {
         console.log(location)
         return res.status(200).send(location)
     } catch (error) {
-        console.log(error)
-        res.status(500).send(error)
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 })
 
@@ -84,7 +123,7 @@ router.get('/', async (req: Request, res: Response) => {
  *          type: integer
  *        required: true
  *        description: The location id
- *     tags: [location]
+ *     tags: [Locations]
  *     responses:
  *       200:
  *         description: location by id
@@ -103,8 +142,7 @@ router.get('/:id', async (req: Request, res: Response) => {
         const location = await new Location({ id }).fetch()
         return res.status(200).send(location)
     } catch (error: any) {
-        console.log(error)
-        if (error?.message === "EmptyResponse")
+        if (error.message === "EmptyResponse")
             return res.sendStatus(404)
         else
             return res.status(500).send(error)
@@ -116,34 +154,39 @@ router.get('/:id', async (req: Request, res: Response) => {
  * /api/location:
  *   post:
  *     summary: Create a new location
- *     tags: [location]
+ *     tags: [Locations]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/location'
+ *             $ref: '#/components/schemas/LocationPost'
  *     responses:
  *       200:
  *         description: The location was successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/location'
+ *               $ref: '#/components/schemas/LocationPost'
  *       500:
  *         description: Some server error
  */
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', validateBody(_schema.ILocation), async (req: RequestBody<ILocation>, res: Response) => {
     try {
-        let data = req.body;
-        if (!data) {
-            return res.status(500).send("missing parameter")
-        }
-        const location = await new Location().save(data);
+        const location = await new Location().save({
+            street: req.body.street,
+            post_number: req.body.post_number,
+            city: req.body.city,
+            country: req.body.country,
+            long: req.body.long,
+            lat: req.body.lat
+        });
         return res.status(200).json(location);
     } catch (error) {
-        console.log(error)
-        return res.status(500).send(error)
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 
 });
@@ -153,7 +196,7 @@ router.post('/', async (req: Request, res: Response) => {
  * /api/location/{id}:
  *   delete:
  *     summary: Remove the location entry
- *     tags: [location]
+ *     tags: [Locations]
  *     parameters:
  *       - in: path
  *         name: id
@@ -178,8 +221,10 @@ router.delete("/:id", async (req: Request, res: Response) => {
         return res.sendStatus(200)
 
     } catch (error) {
-        console.log(error)
-        return res.status(500).send(error)
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -201,7 +246,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
  *          type: number
  *        required: true
  *        description: The longitude value
- *     tags: [location]
+ *     tags: [Locations]
  *     responses:
  *       200:
  *         description: location by id
@@ -214,57 +259,43 @@ router.delete("/:id", async (req: Request, res: Response) => {
  *       404:
  *         description: The location was not found
  */
- router.get('/:lat' + '/:long', async (req: Request, res: Response) => {      
-    try {        
-    NearestCity(parseInt(req.params.lat), parseInt(req.params.long));    
-    async function NearestCity(latitude: any, longitude: any) {
-    const locationsJSON = await new Location().fetchAll()     
-        
-    const x = locationsJSON.toJSON();
-    const result = x.map(Object.values);
+router.get('/:lat' + '/:long', async (req: Request, res: Response) => {
 
-    var minDif = Number.MAX_SAFE_INTEGER;
-    let closest: any;
+    try {
+        NearestCity(parseInt(req.params.lat), parseInt(req.params.long));
 
-    for (let index = 0; index < result.length; ++index) {
-      var dif = PythagorasEquirectangular(latitude, longitude, result[index][6], result[index][7]);
-      if (dif < minDif) {
-        closest = index;
-        minDif = dif;
-      }
-    }  
-        //We return lat and long of the closest location
-        var lat = result[closest][6];
-        var long = result[closest][7];
+        async function NearestCity(latitude: any, longitude: any) {
+            const locations = await new Location().fetchAll()
 
-        return res.status(200).send({latitude: lat, longitude: long});    
-        //return res.status(200).send(result);
-    }   
-    } catch (error: any) {
-        console.log(error)
-        if (error?.message === "EmptyResponse")
+            const locationsJSON = locations.toJSON();
+            const result = locationsJSON.map(Object.values);
+
+            for (let index = 0; index < result.length; ++index) {
+                var dif = PythagorasEquirectangular.PythagorasEquirectangular(latitude, longitude, result[index][6], result[index][7]);
+                result[index].push(dif)
+            }
+
+            let citiesSortedByAsc = result.sort((a: any, b: any) => a[8] - b[8])
+            var arrCitiesSorted: { id: Number; title: String; lat: Number; long: Number; distance: Number; }[] = []
+
+            citiesSortedByAsc.forEach((element: any[]) => {
+                arrCitiesSorted.push({
+                    'id': element[0],
+                    'title': element[1],
+                    'lat': element[6],
+                    'long': element[7],
+                    'distance': element[8]
+                })
+            });
+
+            return res.status(200).send(arrCitiesSorted);
+        }
+    } catch (error) {
+        if (error.message === "EmptyResponse")
             return res.sendStatus(404)
         else
             return res.status(500).send(error)
     }
 })
-
-// Calculate from Degrees to Radians
-function Deg2Rad(deg: any) {
-    return deg * Math.PI / 180;
-}
-
-// Calculate Pythagoras equation
-function PythagorasEquirectangular(lat1: any, lon1: any, lat2: any, lon2: any) {
-    lat1 = Deg2Rad(lat1);
-    lat2 = Deg2Rad(lat2);
-    lon1 = Deg2Rad(lon1);
-    lon2 = Deg2Rad(lon2);
-    var R = 6371; // km
-    var x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
-    var y = (lat2 - lat1);
-    var d = Math.sqrt(x * x + y * y) * R;
-    return d;
-}
 
 export default router

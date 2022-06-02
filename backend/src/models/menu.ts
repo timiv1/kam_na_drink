@@ -1,11 +1,6 @@
-import { bookshelf } from '@models/bookshelf'
-import { DrinkMenu } from '@models/drink_menu'
-import { Bar } from '@models/bar'
-
-interface IMenu {
-    id: number;
-    title: string;
-}
+import { bookshelf } from './bookshelf'
+import { DrinkMenu } from './drink_menu'
+import { Bar } from './bar'
 
 const Menu = bookshelf.model("Menu", {
     tableName: 'menus',
@@ -13,8 +8,8 @@ const Menu = bookshelf.model("Menu", {
         return this.hasMany(DrinkMenu);
     },
     bars() {
-        return this.hasMany(Bar)
+        return this.belongsTo(Bar);
     }
 });
 
-export { Menu, IMenu };
+export { Menu };

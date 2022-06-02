@@ -1,7 +1,13 @@
 import { Router, Request, Response } from 'express';
-import { Contact, IContact } from '@models/contact'
+import { Contact } from '@models/contact'
+import { IContact } from '@models/schema_definitions'
+import _schema from '@shared/_schema';
+import validateBody from 'src/middleware/validateBody';
+
 
 const router = Router()
+
+type RequestBody<T> = Request<{}, {}, T>;
 
 /** Contact object
  * @swagger
@@ -25,12 +31,30 @@ const router = Router()
  *           description: Contact's email
  */
 
+/** ContactPost object
+ * @swagger
+ * components:
+ *   schemas:
+ *     ContactPost:
+ *       type: object
+ *       required:
+ *         - phone
+ *         - email
+ *       properties:
+ *         phone:
+ *           type: string
+ *           description: Contact's phone number
+ *         email:
+ *           type: string
+ *           description: Contact's email
+ */
+
 /** Returns the list of all contact
  * @swagger
  * /api/contacts:
  *   get:
  *     summary: Returns the list of all contact
- *     tags: [contact]
+ *     tags: [Contacts]
  *     responses:
  *       200:
  *         description: The list of the contact
@@ -46,8 +70,10 @@ router.get('/', async (req: Request, res: Response) => {
         const contact = await new Contact().fetchAll()
         return res.status(200).send(contact)
     } catch (error) {
-        console.log(error)
-        res.status(500).send(error)
+        if (error.message === "EmptyResponse")
+        return res.sendStatus(404)
+      else
+        return res.status(500).send(error)
     }
 })
 
@@ -63,7 +89,7 @@ router.get('/', async (req: Request, res: Response) => {
  *          type: integer
  *        required: true
  *        description: The contact id
- *     tags: [contact]
+ *     tags: [Contacts]
  *     responses:
  *       200:
  *         description: contact by id
@@ -83,10 +109,10 @@ router.get('/:id', async (req: Request, res: Response) => {
         return res.status(200).send(contact)
     } catch (error: any) {
         console.log(error)
-        if (error?.message === "EmptyResponse")
-            return res.sendStatus(404)
-        else
-            return res.status(500).send(error)
+        if (error.message === "EmptyResponse")
+        return res.sendStatus(404)
+      else
+        return res.status(500).send(error)
     }
 })
 
@@ -95,33 +121,34 @@ router.get('/:id', async (req: Request, res: Response) => {
  * /api/contacts:
  *   post:
  *     summary: Create a new contact
- *     tags: [contact]
+ *     tags: [Contacts]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/contact'
+ *             $ref: '#/components/schemas/ContactPost'
  *     responses:
  *       200:
  *         description: The contact was successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/contact'
+ *               $ref: '#/components/schemas/ContactPost'
  *       500:
  *         description: Some server error
  */
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', validateBody(_schema.IContact), async (req: RequestBody<IContact>, res: Response) => {
     try {
-        let data = req.body;
-        if (!data) {
-            return res.status(500).send("missing parameter")
-        }
-        const contact = await new Contact().save(data);
+        const contact = await new Contact().save({
+            phone: req.body.phone,
+            email: req.body.email
+        });
         return res.status(200).json(contact);
     } catch (error) {
-        console.log(error)
+        if (error.message === "EmptyResponse")
+        return res.sendStatus(404)
+      else
         return res.status(500).send(error)
     }
 
@@ -132,7 +159,7 @@ router.post('/', async (req: Request, res: Response) => {
  * /api/contacts/{id}:
  *   delete:
  *     summary: Remove the contact entry
- *     tags: [contact]
+ *     tags: [Contacts]
  *     parameters:
  *       - in: path
  *         name: id
@@ -157,7 +184,9 @@ router.delete("/:id", async (req: Request, res: Response) => {
         return res.sendStatus(200)
 
     } catch (error) {
-        console.log(error)
+        if (error.message === "EmptyResponse")
+        return res.sendStatus(404)
+      else
         return res.status(500).send(error)
     }
 });

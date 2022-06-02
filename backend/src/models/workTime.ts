@@ -1,12 +1,6 @@
-import { bookshelf } from "@models/bookshelf";
-import { Bar } from "@models/bar"
-
-interface IWorkTime {
-    id: number,
-    day: string,
-    from: string,
-    to: string,
-}
+import { bookshelf } from "./bookshelf";
+import { Bar } from "./bar"
+import { WorkTimeBar } from "./work_time_bar"
 
 const WorkTime = bookshelf.model("WorkTime", {
     tableName: "work_times",
@@ -14,7 +8,7 @@ const WorkTime = bookshelf.model("WorkTime", {
         return this.belongsToMany(Bar, 'work_times_bars', 'bar_id', 'work_time_id')
     },
     workTimeBar() {
-        return this.hasMany('WorkTimeBar')
+        return this.hasMany(WorkTimeBar)
     }
 })
-export { IWorkTime, WorkTime }
+export {  WorkTime }

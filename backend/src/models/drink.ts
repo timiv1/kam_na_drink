@@ -1,18 +1,7 @@
-import { bookshelf } from '@models/bookshelf'
-import { DrinkUser } from '@models/drink_user'
-import { DrinkType} from '@models/drink_type'
-import { DrinkMenu} from '@models/drink_menu'
-
-interface IDrink {
-    id: number;
-    name: string;
-    price: number;
-    year: number;
-    volume: number;
-    alcohol: number;
-    description: string;
-    drink_type_id: number;
-}
+import { bookshelf } from './bookshelf'
+import { DrinkUser } from './drink_user'
+import { DrinkType} from './drink_type'
+import { DrinkMenu} from './drink_menu'
 
 const Drink = bookshelf.model("Drink", {
     tableName: 'drinks',
@@ -27,4 +16,4 @@ const Drink = bookshelf.model("Drink", {
     }
 });
 
-export { Drink, IDrink };
+export { Drink };

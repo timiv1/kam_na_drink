@@ -1,16 +1,10 @@
-import { bookshelf } from '@models/bookshelf'
+import { bookshelf } from './bookshelf'
 import { Bar } from './bar';
 import { User } from './user';
 
-interface IBarUser {
-    id: number;
-    bar_id: number;
-    user_id: number;
-}
-
 const BarUser = bookshelf.model("BarsUser", {
     tableName: 'bars_users',
-    bar() {
+    bars() {
         return this.belongsTo(Bar);
     },
     user() {
@@ -18,4 +12,4 @@ const BarUser = bookshelf.model("BarsUser", {
     },
 });
 
-export { BarUser, IBarUser };
+export { BarUser };
