@@ -1,14 +1,15 @@
-import { bookshelf } from '@models/bookshelf'
-import { DrinkUser } from '@models/drink_user';
-import { BarUser } from '@models/bar_user';
+import { bookshelf } from './bookshelf'
+import { DrinkUser } from './drink_user';
+import { BarUser } from './bar_user';
 
-interface IUser {
+export interface IAuth {
     id: number;
     first_name: string;
     last_name: string;
     email: string;
     password: string;
 }
+
 
 const User = bookshelf.model("User", {
     tableName: 'users',
@@ -20,4 +21,4 @@ const User = bookshelf.model("User", {
     }
 });
 
-export { User, IUser };
+export { User };

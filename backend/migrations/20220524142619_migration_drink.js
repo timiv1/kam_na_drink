@@ -10,7 +10,7 @@ exports.up = function (knex) {
         table.increments('id').primary();
         table.string('name').notNullable();
         table.decimal('volume');
-        table.decimal('price');
+        table.decimal('price').notNullable();
         table.decimal('alcohol');
         table.integer('year');
         table.string('description');

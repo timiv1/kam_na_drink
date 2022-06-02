@@ -6,7 +6,6 @@ exports.up = function (knex) {
   return knex.schema.createTable("bars", (table) => {
     table.increments("id").primary();
     table.string("name").notNullable();
-    table.integer('menu_id').references('id').inTable('menus');
     table.integer("contact_id").references("id").inTable("contacts");
     table.integer("location_id").references("id").inTable("locations");
   });

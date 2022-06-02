@@ -1,10 +1,4 @@
-import { bookshelf } from '@models/bookshelf'
-
-interface IWorkTimeBar {
-    id: number;
-    bar_id: number;
-    work_time_id: number;
-}
+import { bookshelf } from './bookshelf'
 
 const WorkTimeBar = bookshelf.model("WorkTimeBar", {
     tableName: 'work_times_bars',
@@ -16,4 +10,4 @@ const WorkTimeBar = bookshelf.model("WorkTimeBar", {
     }
 });
 
-export { WorkTimeBar, IWorkTimeBar };
+export { WorkTimeBar };

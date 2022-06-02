@@ -1,13 +1,6 @@
-import { bookshelf } from '@models/bookshelf'
-import { Drink } from '@models/drink';
-import { Menu } from '@models/menu';
-
-interface IDrinkMenu {
-    id: number;
-    price: number;
-    drink_id: number;
-    menu_id: number;
-}
+import { bookshelf } from './bookshelf'
+import { Drink } from './drink';
+import { Menu } from './menu';
 
 const DrinkMenu = bookshelf.model("DrinkMenu", {
     tableName: 'drinks_menus',
@@ -19,4 +12,4 @@ const DrinkMenu = bookshelf.model("DrinkMenu", {
     },
 });
 
-export { DrinkMenu, IDrinkMenu };
+export { DrinkMenu };

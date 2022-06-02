@@ -6,7 +6,6 @@
 exports.up = function (knex) {
   return knex.schema.createTable("locations", (table) => {
     table.increments("id").primary();
-    table.string("title").notNullable();
     table.string("street").notNullable();
     table.string("city").notNullable();
     table.integer("post_number").notNullable();

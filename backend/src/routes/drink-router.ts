@@ -1,14 +1,19 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
 import { ParamMissingError } from '@shared/errors';
-import { Drink, IDrink } from '@models/drink';
-import { DrinkType, IDrinkType } from '@models/drink_type';
+import { Drink } from '@models/drink';
+import { DrinkType } from '@models/drink_type';
+import { IDrink, IDrinkType } from '@models/schema_definitions'
+import _schema from '@shared/_schema';
+import validateBody from 'src/middleware/validateBody';
 
 // Constants
 const router = Router();
 const { CREATED, OK } = StatusCodes;
 
 const drink_types: string = "/drink_types";
+
+type RequestBody<T> = Request<{}, {}, T>;
 
 /** Drinks object
  * @swagger
@@ -46,6 +51,39 @@ const drink_types: string = "/drink_types";
  *           description: Drink_type_id of the drink
  */
 
+/** DrinkPost object
+ * @swagger
+ * components:
+ *   schemas:
+ *     DrinkPost:
+ *       type: object
+ *       required:
+ *         - name
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: Name of the drink
+ *         price:
+ *           type: number
+ *           description: Price of the drink
+ *         volume:
+ *           type: number
+ *           description: Volume of the drink
+ *         year:
+ *           type: number
+ *           description: Year of the drink
+ *         alcohol:
+ *           type: integer
+ *           description: Alcohol content of the drink
+ *         description:
+ *           type: string
+ *           description: Description of the drink
+ *         drink_type_id:
+ *           type: number
+ *           description: Drink_type_id of the drink
+ */
+
+
 /** DrinkType object
  * @swagger
  * components:
@@ -62,12 +100,25 @@ const drink_types: string = "/drink_types";
  *           description: Type of a drink
  */
 
+/** DrinkTypePost object
+ * @swagger
+ * components:
+ *   schemas:
+ *     DrinkTypePost:
+ *       type: object
+ *       required:
+ *       properties:
+ *         type:
+ *           type: string
+ *           description: Type of a drink
+ */
+
 /** Returns the list of all drinks
  * @swagger
  * /api/drinks:
  *   get:
  *     summary: Returns the list of all drinks
- *     tags: [drinks]
+ *     tags: [Drinks]
  *     responses:
  *       200:
  *         description: The list of the drinks
@@ -81,9 +132,12 @@ const drink_types: string = "/drink_types";
 router.get('/', async (_: Request, res: Response) => {
     try {
         const drinks = await new Drink().fetchAll({ withRelated: "drink_type" });
-        return res.status(OK).json(drinks);
+        return res.status(200).json(drinks);
     } catch (error) {
-        console.log(error);
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -92,7 +146,7 @@ router.get('/', async (_: Request, res: Response) => {
  * /api/drinks/price:
  *   get:
  *     summary: Returns the list of all drinks sorted by ascending price (lowest to highest)
- *     tags: [drinks]
+ *     tags: [Drinks]
  *     responses:
  *       200:
  *         description: The list of the drinks ordered by price ascending
@@ -107,9 +161,12 @@ router.get('/price', async (_: Request, res: Response) => {
     try {
         const drinks = await new Drink().fetchAll({ withRelated: "drink_type" });
         drinks.orderBy('price', 'ASC');
-        return res.status(OK).json(drinks);
-    } catch (err) {
-        console.log(err);
+        return res.status(200).json(drinks);
+    } catch (error) {
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -125,7 +182,7 @@ router.get('/price', async (_: Request, res: Response) => {
  *          type: integer
  *        required: true
  *        description: The drinks id
- *     tags: [drinks]
+ *     tags: [Drinks]
  *     responses:
  *       200:
  *         description: drink by id
@@ -142,9 +199,12 @@ router.get("/:id", async (req: Request, res: Response) => {
     try {
         const id = req.params.id
         const drink = await new Drink({ id }).fetch({ withRelated: "drink_type" });
-        return res.status(OK).json(drink);
+        return res.status(200).json(drink);
     } catch (error) {
-        console.log(error);
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -153,33 +213,40 @@ router.get("/:id", async (req: Request, res: Response) => {
  * /api/drinks:
  *   post:
  *     summary: Create a new drink
- *     tags: [drinks]
+ *     tags: [Drinks]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/drinks'
+ *             $ref: '#/components/schemas/DrinkPost'
  *     responses:
  *       200:
  *         description: The drink was successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/drinks'
+ *               $ref: '#/components/schemas/DrinkPost'
  *       500:
  *         description: Some server error
  */
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', validateBody(_schema.IDrink), async (req: RequestBody<IDrink>, res: Response) => {
     try {
-        let newDrink: IDrink = req.body;
-        if (!newDrink) {
-            throw new ParamMissingError();
-        }
-        const newEntry = await new Drink().save(newDrink);
-        return res.status(CREATED).json(newEntry);
+        const newEntry = await new Drink().save({
+            name: req.body.name,
+            price: req.body.price,
+            year: req.body.year,
+            volume: req.body.volume,
+            alcohol: req.body.alcohol,
+            description: req.body.description,
+            drink_type_id: req.body.drink_type_id
+        });
+        return res.status(200).json(newEntry);
     } catch (error) {
-        console.log(error);
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -188,7 +255,7 @@ router.post('/', async (req: Request, res: Response) => {
  * /api/drinks/{id}:
  *   put:
  *     summary: Update a drink
- *     tags: [drinks]
+ *     tags: [Drinks]
  *     requestBody:
  *       required: true
  *       content:
@@ -207,15 +274,18 @@ router.post('/', async (req: Request, res: Response) => {
  */
 router.put("/:id", async (req: Request, res: Response) => {
     try {
-        const updatedUser: IDrink = req.body;
+        const updatedUser = req.body;
         const id = req.params.id
         if (!updatedUser) {
             throw new ParamMissingError();
         }
         const newEntry = await new Drink({ id }).save(updatedUser);
-        return res.status(OK).json(newEntry);
+        return res.status(200).json(newEntry);
     } catch (error) {
-        console.log(error);
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -224,7 +294,7 @@ router.put("/:id", async (req: Request, res: Response) => {
  * /api/drinks/{id}:
  *   delete:
  *     summary: Remove the drinks entry
- *     tags: [drinks]
+ *     tags: [Drinks]
  *     parameters:
  *       - in: path
  *         name: id
@@ -248,16 +318,19 @@ router.delete("/:id", async (req: Request, res: Response) => {
         await new Drink({ id }).destroy();
         return res.status(OK).end();
     } catch (error) {
-        console.log(error);
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
 /** Returns the list of drink types
  * @swagger
- * /api/drinks/types/all:
+ * /api/drinks/types:
  *   get:
  *     summary: Returns the list of drink types
- *     tags: [drinktype]
+ *     tags: [DrinkTypes]
  *     responses:
  *       200:
  *         description: The list of drink types
@@ -270,12 +343,15 @@ router.delete("/:id", async (req: Request, res: Response) => {
  *       500:
  *         description: Some server error
  */
-router.get('/types/all', async (_: Request, res: Response) => {
+router.get('/types', async (_: Request, res: Response) => {
     try {
         const drink_types = await new DrinkType().fetchAll({ withRelated: "drinks" });
-        return res.status(OK).json(drink_types);
+        return res.status(200).json(drink_types);
     } catch (error) {
-        
+        if (error.message === "EmptyResponse")
+        return res.sendStatus(404)
+    else
+        return res.status(500).send(error)
     }
 });
 
@@ -284,33 +360,34 @@ router.get('/types/all', async (_: Request, res: Response) => {
  * /api/drinks/types:
  *   post:
  *     summary: Create a new drink type
- *     tags: [drinktype]
+ *     tags: [DrinkTypes]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/drinktype'
+ *             $ref: '#/components/schemas/DrinkTypePost'
  *     responses:
  *       200:
  *         description: The drink type was successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/drinktype'
+ *               $ref: '#/components/schemas/DrinkTypePost'
  *       500:
  *         description: Some server error
  */
-router.post('/types', async (req: Request, res: Response) => {
+router.post('/types', validateBody(_schema.IDrinkType), async (req: RequestBody<IDrinkType>, res: Response) => {
     try {
-        let newDrinkType: IDrinkType = req.body;
-        if (!newDrinkType) {
-            throw new ParamMissingError();
-        }
-        const newEntry = await new DrinkType().save(newDrinkType);
-        return res.status(CREATED).json(newEntry);
+        const newEntry = await new DrinkType().save({
+            type: req.body.type
+        });
+        return res.status(200).json(newEntry);
     } catch (error) {
-
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -319,7 +396,7 @@ router.post('/types', async (req: Request, res: Response) => {
  * /api/drinks/types/{id}:
  *   put:
  *     summary: Update a drink type
- *     tags: [drinktype]
+ *     tags: [DrinkTypes]
  *     requestBody:
  *       required: true
  *       content:
@@ -338,7 +415,7 @@ router.post('/types', async (req: Request, res: Response) => {
  */
 router.put('/types/:id', async (req: Request, res: Response) => {
     try {
-        const updatedDrinkType: IDrinkType = req.body;
+        const updatedDrinkType = req.body;
         const id = req.params.id
         if (!updatedDrinkType) {
             throw new ParamMissingError();
@@ -346,7 +423,10 @@ router.put('/types/:id', async (req: Request, res: Response) => {
         const newEntry = await new DrinkType({ id }).save(updatedDrinkType);
         return res.status(OK).json(newEntry);
     } catch (error) {
-
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -355,7 +435,7 @@ router.put('/types/:id', async (req: Request, res: Response) => {
  * /api/drinks/types/{id}:
  *   delete:
  *     summary: Remove the drink type entry
- *     tags: [drinktype]
+ *     tags: [DrinkTypes]
  *     parameters:
  *       - in: path
  *         name: id
@@ -379,7 +459,10 @@ router.delete('/types/:id', async (req: Request, res: Response) => {
         await new DrinkType({ id }).destroy();
         return res.status(OK).end();
     } catch (error) {
-        
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 

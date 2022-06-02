@@ -1,11 +1,6 @@
-import { bookshelf } from "@models/bookshelf";
-import { Bar } from "@models/bar"
+import { bookshelf } from "./bookshelf";
+import { Bar } from "./bar"
 
-interface IContact {
-    id: number,
-    phone: string,
-    email: string,
-}
 
 const Contact = bookshelf.model("Contact", {
     tableName: "contacts",
@@ -13,4 +8,4 @@ const Contact = bookshelf.model("Contact", {
         return this.hasOne(Bar)
     }
 })
-export { IContact, Contact }
+export { Contact }

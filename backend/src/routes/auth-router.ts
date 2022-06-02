@@ -1,7 +1,7 @@
 import StatusCodes from 'http-status-codes';
 import { NextFunction, Request, Response, Router } from 'express';
 import { ParamMissingError } from '@shared/errors';
-import { User, IUser } from '@models/user';
+import { User } from '@models/user';
 import bcryptjs from 'bcryptjs';
 import logging from '../config/logging';
 import signJWT from '../functions/signJWT';
@@ -50,7 +50,7 @@ export const p = {
  * /api/auth/validateToken:
  *   get:
  *     summary: Validates the Token
- *     tags: [userToken]
+ *     tags: [Authentication]
  *     responses:
  *       200:
  *         description: Validates the Token
@@ -61,93 +61,93 @@ export const p = {
  *               items:
  *                 $ref: '#/components/schemas/userToken'
  */
- router.get('/validateToken', extractJWT, async (req: Request, res: Response, next: NextFunction) => {
-     logging.info(NAMESPACE, 'Token validated, user authorized.');
-     return res.status(200).json({
-         message: 'Token(s) validated'
-     });
- });
- 
- /** Create a new user
- * @swagger
- * /api/auth/register:
- *   post:
- *     summary: Create a new user
- *     tags: [userToken]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/userToken'
- *     responses:
- *       200:
- *         description: The user was successfully created
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/userToken'
- *       500:
- *         description: Some server error
- */
- router.post('/register', async (req: Request, res: Response) => {
-     let { password } = req.body;
-     bcryptjs.hash(password, 10, async (hashError, hash) => {
-         if (hashError) {
-             return res.status(401).json({
-                 message: hashError.message,
-                 error: hashError
-             });
-         }        
- 
-         try {                        
-            const newUser: IUser = req.body;
+router.get('/validateToken', extractJWT, async (req: Request, res: Response, next: NextFunction) => {
+    logging.info(NAMESPACE, 'Token validated, user authorized.');
+    return res.status(200).json({
+        message: 'Token(s) validated'
+    });
+});
+
+/** Create a new user
+* @swagger
+* /api/auth/register:
+*   post:
+*     summary: Create a new user
+*     tags: [Authentication]
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/components/schemas/userToken'
+*     responses:
+*       200:
+*         description: The user was successfully created
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/userToken'
+*       500:
+*         description: Some server error
+*/
+router.post('/register', async (req: Request, res: Response) => {
+    let { password } = req.body;
+    bcryptjs.hash(password, 10, async (hashError, hash) => {
+        if (hashError) {
+            return res.status(401).json({
+                message: hashError.message,
+                error: hashError
+            });
+        }
+
+        try {
+            const newUser = req.body;
             newUser.password = hash;
-   
+
             if (!newUser && !hash) {
-               throw new ParamMissingError();
+                throw new ParamMissingError();
             }
 
             const newEntry = await new User().save(newUser);
             logging.info(NAMESPACE, `User with id ${newEntry.id} inserted.`);
             return res.status(201).json(newEntry);
 
-         } catch (error) {
+        } catch (error) {
             logging.error(NAMESPACE, error.message, error);
- 
+
             return res.status(500).json({
                 message: error.message,
                 error
             });
-         }
-     })
+        }
+    })
 });
 
- /** Login a new user
- * @swagger
- * /api/auth/login:
- *   post:
- *     summary: Login a new user
- *     tags: [userToken]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/userToken'
- *     responses:
- *       200:
- *         description: The user was successfully created
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/userToken'
- *       500:
- *         description: Some server error
- */
+/** Login a new user
+* @swagger
+* /api/auth/login:
+*   post:
+*     summary: Login a new user
+*     tags: [Authentication]
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/components/schemas/userToken'
+*     responses:
+*       200:
+*         description: The user was successfully created
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/userToken'
+*       500:
+*         description: Some server error
+*/
 
- router.post('/login', async (req: Request, res: Response) => {
-    let password = req.body.password; 
+router.post('/login', async (req: Request, res: Response) => {
+    let password = req.body.password;
     let email = req.body.email
 
     const users = await new User().where({ email: email }).fetchAll();
@@ -173,7 +173,7 @@ export const p = {
                     });
                 }
             });
-        }       
+        }
     });
 });
 
