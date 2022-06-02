@@ -358,6 +358,47 @@ router.get("/:id" + menudrinks + "/types/:drink_type_id", async (req: Request, r
     }
 });
 
+/** Get all menu drinks by drink_id
+ * @swagger
+ * /api/menus/menudrinks/drink/{id}:
+ *   get:
+ *     summary: Get the menu drinks by drink_id
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: The drink_id
+ *     tags: [MenuDrinks]
+ *     responses:
+ *       200:
+ *         description: menu drinks by drink_id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/MenuDrink'
+ *       404:
+ *         description: The menu drinks were not found
+ */
+ router.get("/menudrinks/drink/:id", async (req: Request, res: Response) => { // THIS IS THE ONE
+    try {
+        const id = req.params.id
+        const menu_drinks = await new DrinkMenu().where({ drink_id: id }).fetchAll({
+            withRelated: ["drink", "menu.bars.location"]
+            
+        });
+        return res.status(200).json(menu_drinks);
+    } catch (error) {
+        if (error.message === "EmptyResponse")
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
+    }
+});
+
 /** Create a new menu drink
  * @swagger
  * /api/menus/menudrinks:
