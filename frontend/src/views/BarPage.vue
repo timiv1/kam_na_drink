@@ -14,7 +14,7 @@ import { defineComponent } from "vue";
 import { IonGrid, IonRow, IonCol } from "@ionic/vue";
 
 export default defineComponent({
-  name: "SearchPage",
+  name: "BarPage",
   components: {
     IonGrid,
     IonRow,
