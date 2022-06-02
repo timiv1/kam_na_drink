@@ -31,15 +31,9 @@ type RequestBody<T> = Request<{}, {}, T>;
  *         name:
  *           type: string
  *           description: Name of the drink
- *         price:
- *           type: number
- *           description: Price of the drink
  *         volume:
  *           type: number
  *           description: Volume of the drink
- *         year:
- *           type: number
- *           description: Year of the drink
  *         alcohol:
  *           type: integer
  *           description: Alcohol content of the drink
@@ -63,15 +57,9 @@ type RequestBody<T> = Request<{}, {}, T>;
  *         name:
  *           type: string
  *           description: Name of the drink
- *         price:
- *           type: number
- *           description: Price of the drink
  *         volume:
  *           type: number
  *           description: Volume of the drink
- *         year:
- *           type: number
- *           description: Year of the drink
  *         alcohol:
  *           type: integer
  *           description: Alcohol content of the drink
@@ -141,34 +129,34 @@ router.get('/', async (_: Request, res: Response) => {
     }
 });
 
-/** Returns the list of all drinks sorted by ascending price (lowest to highest)
- * @swagger
- * /api/drinks/price:
- *   get:
- *     summary: Returns the list of all drinks sorted by ascending price (lowest to highest)
- *     tags: [Drinks]
- *     responses:
- *       200:
- *         description: The list of the drinks ordered by price ascending
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/drinks'
- */
-router.get('/price', async (_: Request, res: Response) => {
-    try {
-        const drinks = await new Drink().fetchAll({ withRelated: "drink_type" });
-        drinks.orderBy('price', 'ASC');
-        return res.status(200).json(drinks);
-    } catch (error) {
-        if (error.message === "EmptyResponse")
-            return res.sendStatus(404)
-        else
-            return res.status(500).send(error)
-    }
-});
+// /** Returns the list of all drinks sorted by ascending price (lowest to highest)
+//  * @swagger
+//  * /api/drinks/price:
+//  *   get:
+//  *     summary: Returns the list of all drinks sorted by ascending price (lowest to highest)
+//  *     tags: [Drinks]
+//  *     responses:
+//  *       200:
+//  *         description: The list of the drinks ordered by price ascending
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               type: array
+//  *               items:
+//  *                 $ref: '#/components/schemas/drinks'
+//  */
+// router.get('/price', async (_: Request, res: Response) => {
+//     try {
+//         const drinks = await new Drink().fetchAll({ withRelated: "drink_type" });
+//         drinks.orderBy('price', 'ASC');
+//         return res.status(200).json(drinks);
+//     } catch (error) {
+//         if (error.message === "EmptyResponse")
+//             return res.sendStatus(404)
+//         else
+//             return res.status(500).send(error)
+//     }
+// });
 
 /** Get the drink by id
  * @swagger
@@ -234,8 +222,6 @@ router.post('/', validateBody(_schema.IDrink), async (req: RequestBody<IDrink>, 
     try {
         const newEntry = await new Drink().save({
             name: req.body.name,
-            price: req.body.price,
-            year: req.body.year,
             volume: req.body.volume,
             alcohol: req.body.alcohol,
             description: req.body.description,
@@ -256,19 +242,26 @@ router.post('/', validateBody(_schema.IDrink), async (req: RequestBody<IDrink>, 
  *   put:
  *     summary: Update a drink
  *     tags: [Drinks]
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: The drink id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/drinks'
+ *             $ref: '#/components/schemas/DrinkPost'
  *     responses:
  *       200:
  *         description: The drink was successfully updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/drinks'
+ *               $ref: '#/components/schemas/DrinkPost'
  *       500:
  *         description: Some server error
  */
@@ -345,7 +338,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
  */
 router.get('/types', async (_: Request, res: Response) => {
     try {
-        const drink_types = await new DrinkType().fetchAll({ withRelated: "drinks" });
+        const drink_types = await new DrinkType().fetchAll();//{ withRelated: "drinks" }
         return res.status(200).json(drink_types);
     } catch (error) {
         if (error.message === "EmptyResponse")
@@ -397,19 +390,26 @@ router.post('/types', validateBody(_schema.IDrinkType), async (req: RequestBody<
  *   put:
  *     summary: Update a drink type
  *     tags: [DrinkTypes]
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: The drink type id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/drinktype'
+ *             $ref: '#/components/schemas/DrinkTypePost'
  *     responses:
  *       200:
  *         description: The drink type was successfully updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/drinktype'
+ *               $ref: '#/components/schemas/DrinkTypePost'
  *       500:
  *         description: Some server error
  */

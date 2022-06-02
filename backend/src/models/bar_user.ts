@@ -4,7 +4,7 @@ import { User } from './user';
 
 const BarUser = bookshelf.model("BarsUser", {
     tableName: 'bars_users',
-    bar() {
+    bars() {
         return this.belongsTo(Bar);
     },
     user() {

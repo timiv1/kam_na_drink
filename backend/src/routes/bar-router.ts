@@ -88,9 +88,9 @@ type RequestBody<T> = Request<{}, {}, T>;
  *               items:
  *                 $ref: '#/components/schemas/Bar'
  */
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (_: Request, res: Response) => {
   try {
-    const bars = await new Bar().fetchAll({ withRelated: "menu" })
+    const bars = await new Bar().fetchAll({ withRelated: "location" })
     return res.status(200).send(bars)
   } catch (error) {
     if (error.message === "EmptyResponse")
@@ -126,7 +126,7 @@ router.get('/', async (req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id
-    const bar = await new Bar({ id }).fetch()
+    const bar = await new Bar({ id }).fetch({ withRelated: ["location", "contact", "work_times_bars.workTime"] })
     console.log('bar')
     return res.status(200).send(bar)
   } catch (error) {
@@ -217,17 +217,10 @@ router.post('/', validateBody(_schema.IBar), async (req: RequestBody<IBar>, res:
 
 /** Connect work_time to bar
  * @swagger
- * /api/barworktime:
+ * /api/bars/barworktime:
  *   post:
  *     summary: Connect work_time to bar
  *     tags: [Bars]
- *     parameters:
- *      - in: path
- *        name: id
- *        schema:
- *          type: integer
- *        required: true
- *        description: The bar id
  *     requestBody:
  *       required: true
  *       content:
@@ -244,7 +237,6 @@ router.post('/', validateBody(_schema.IBar), async (req: RequestBody<IBar>, res:
  *       500:
  *         description: Some server error
  */
-
 router.post('/barworktime', async (req: Request, res: Response) => {
   try {
     let data = req.body;
@@ -281,14 +273,14 @@ router.post('/barworktime', async (req: Request, res: Response) => {
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Bar'
+ *            $ref: '#/components/schemas/BarPost'
  *    responses:
  *      200:
  *        description: The Bar was updated
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Bar'
+ *              $ref: '#/components/schemas/BarPost'
  *      404:
  *        description: The Bar was not found
  *      500:

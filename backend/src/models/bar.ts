@@ -4,12 +4,13 @@ import { Contact } from "./contact"
 import { Location } from "./location"
 import { Menu } from "./menu"
 import { BarUser } from "./bar_user"
+import { WorkTimeBar } from './work_time_bar'
 
 
 const Bar = bookshelf.model("Bar", {
     tableName: 'bars',
-    work_times() {
-        return this.belongsToMany(WorkTime, 'work_times_bars', 'work_time_id', 'bar_id');
+    work_times_bars() {
+        return this.hasMany(WorkTimeBar);
     },
     contact() {
         return this.belongsTo(Contact);

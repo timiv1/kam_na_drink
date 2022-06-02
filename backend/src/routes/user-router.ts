@@ -44,6 +44,32 @@ type RequestBody<T> = Request<{}, {}, T>;
  *           description: password of the user
  */
 
+/** UserPost object
+ * @swagger
+ * components:
+ *   schemas:
+ *     UserPost:
+ *       type: object
+ *       required:
+ *         - first_name
+ *         - last_name
+ *         - email
+ *         - password
+ *       properties:
+ *         first_name:
+ *           type: string
+ *           description: first_name of the user
+ *         last_name:
+ *           type: string
+ *           description: last_name of the user
+ *         email:
+ *           type: string
+ *           description: email of the user
+ *         password:
+ *           type: string
+ *           description: password of the user
+ */
+
 /** UsersDrinks object
  * @swagger
  * components:
@@ -63,36 +89,6 @@ type RequestBody<T> = Request<{}, {}, T>;
  *         user_id:
  *           type: integer
  *           description: User id key
- */
-
-/** User object
- * @swagger
- * components:
- *   schemas:
- *     user:
- *       type: object
- *       required:
- *         - id
- *         - first_name
- *         - last_name
- *         - email
- *         - password
- *       properties:
- *         id:
- *           type: integer
- *           description: The auto-generated id of the user
- *         first_name:
- *           type: string
- *           description: first_name of the user
- *         last_name:
- *           type: string
- *           description: last_name of the user
- *         email:
- *           type: string
- *           description: email of the user
- *         password:
- *           type: string
- *           description: password of the user
  */
 
 /** UsersDrinksPost object
@@ -260,19 +256,26 @@ router.get("/:id", async (req: Request, res: Response) => {
  *   put:
  *     summary: Update a user
  *     tags: [Users]
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: The user id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/user'
+ *             $ref: '#/components/schemas/UserPost'
  *     responses:
  *       200:
  *         description: The user was successfully updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/user'
+ *               $ref: '#/components/schemas/UserPost'
  *       500:
  *         description: Some server error
  */
@@ -385,7 +388,7 @@ router.get('/userdrinks/all', extractJWT, async (_: Request, res: Response) => {
 router.get('/:id/userdrinks', async (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        const user_drinks = await new DrinkUser().where({ user_id: id }).fetchAll({});
+        const user_drinks = await new DrinkUser().where({ user_id: id }).fetchAll({ withRelated: "drinks" });
         return res.status(200).json(user_drinks);
     } catch (error) {
         if (error.message === "EmptyResponse")
@@ -470,7 +473,7 @@ router.delete('/userdrinks/:id', async (req: Request, res: Response) => {
 
 /** Returns the list of all user bars
  * @swagger
- * /api/users/userbars:
+ * /api/users/userbars/all:
  *   get:
  *     summary: Returns the list of all user bars
  *     tags: [UserBars]
@@ -484,9 +487,9 @@ router.delete('/userdrinks/:id', async (req: Request, res: Response) => {
  *               items:
  *                 $ref: '#/components/schemas/userbar'
  */
-router.get('/userbars', async (_: Request, res: Response) => {
+router.get('/userbars/all', async (_: Request, res: Response) => {
     try {
-        const bars_users = await new BarUser().fetchAll({});
+        const bars_users = await new BarUser().fetchAll({ withRelated: "bars" });
         return res.status(OK).json({ bars_users: bars_users });
     } catch (error) {
         if (error.message === "EmptyResponse")
@@ -524,7 +527,7 @@ router.get('/userbars', async (_: Request, res: Response) => {
 router.get('/:id/userbars', async (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        const users_bars = await new BarUser().where({ user_id: id }).fetchAll({});
+        const users_bars = await new BarUser().where({ user_id: id }).fetchAll({ withRelated: "bars" });
         return res.status(OK).json(users_bars);
     } catch (error) {
         if (error.message === "EmptyResponse")

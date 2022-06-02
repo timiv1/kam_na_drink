@@ -120,9 +120,9 @@ router.get('/', async (_: Request, res: Response) => {
         return res.status(200).json({ menus });
     } catch (error) {
         if (error.message === "EmptyResponse")
-        return res.sendStatus(404)
-      else
-        return res.status(500).send(error)
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -158,9 +158,9 @@ router.get("/:id", async (req: Request, res: Response) => {
         return res.status(200).json(menu);
     } catch (error) {
         if (error.message === "EmptyResponse")
-        return res.sendStatus(404)
-      else
-        return res.status(500).send(error)
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 
 });
@@ -196,9 +196,9 @@ router.post('/', validateBody(_schema.IMenu), async (req: RequestBody<IMenu>, re
         return res.status(200).json(newEntry);
     } catch (error) {
         if (error.message === "EmptyResponse")
-        return res.sendStatus(404)
-      else
-        return res.status(500).send(error)
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -232,9 +232,9 @@ router.delete("/:id", async (req: Request, res: Response) => {
         return res.status(200).end();
     } catch (error) {
         if (error.message === "EmptyResponse")
-        return res.sendStatus(404)
-      else
-        return res.status(500).send(error)
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 
 });
@@ -242,7 +242,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
 
 /** Returns the list of all menu drinks
  * @swagger
- * /api/menus/menudrinks:
+ * /api/menus/menudrinks/all:
  *   get:
  *     summary: Returns the list of all menu drinks
  *     tags: [MenuDrinks]
@@ -256,27 +256,27 @@ router.delete("/:id", async (req: Request, res: Response) => {
  *               items:
  *                 $ref: '#/components/schemas/MenuDrink'
  */
-router.get(menudrinks, async (_: Request, res: Response) => {
+router.get('/menudrinks/all', async (_: Request, res: Response) => {
     try {
         const menus_drinks = await new DrinkMenu().fetchAll();
         return res.status(200).json({ menu_drinks: menus_drinks });
     } catch (error) {
         if (error.message === "EmptyResponse")
-        return res.sendStatus(404)
-      else
-        return res.status(500).send(error)
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 
 });
 
 /** Get all menu drinks by menu_id
  * @swagger
- * /api/menus/{id}/menudrinks/:
+ * /api/menus/{id}/menudrinks:
  *   get:
  *     summary: Get the drinks by menu_id
  *     parameters:
  *      - in: path
- *        name: menu_id
+ *        name: id
  *        schema:
  *          type: integer
  *        required: true
@@ -294,22 +294,23 @@ router.get(menudrinks, async (_: Request, res: Response) => {
  *       404:
  *         description: The drinks were not found
  */
-router.get("/:id"+ menudrinks, async (req: Request, res: Response) => {
+router.get("/:id/menudrinks", async (req: Request, res: Response) => {
     try {
         const id = req.params.id
+        console.log(id)
         const menu_drinks = await new DrinkMenu().where({ menu_id: id }).fetchAll({ withRelated: "drink" });
         return res.status(200).json(menu_drinks);
     } catch (error) {
         if (error.message === "EmptyResponse")
-        return res.sendStatus(404)
-      else
-        return res.status(500).send(error)
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
 /** Get all menu drinks by menu_id and drink_type_id
  * @swagger
- * /api/menus/menudrinks/{id}/types/{drink_type_id}:
+ * /api/menus/{id}/menudrinks/types/{drink_type_id}:
  *   get:
  *     summary: Get the menu drinks by drink_type_id and menu_id
  *     parameters:
@@ -338,7 +339,7 @@ router.get("/:id"+ menudrinks, async (req: Request, res: Response) => {
  *       404:
  *         description: The drinks were not found
  */
-router.get(menudrinks + "/:id/types/:drink_type_id", async (req: Request, res: Response) => {
+router.get("/:id" + menudrinks + "/types/:drink_type_id", async (req: Request, res: Response) => {
     try {
         const id = req.params.id
         const drink_type_id = req.params.drink_type_id
@@ -351,11 +352,10 @@ router.get(menudrinks + "/:id/types/:drink_type_id", async (req: Request, res: R
         return res.status(200).json(menu_drinks.toJSON().filter((x: any) => Object.keys(x.drink).length > 0)); //filter empty drink objects
     } catch (error) {
         if (error.message === "EmptyResponse")
-        return res.sendStatus(404)
-      else
-        return res.status(500).send(error)
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
-
 });
 
 /** Create a new menu drink
@@ -390,9 +390,9 @@ router.post(menudrinks, validateBody(_schema.IDrinkMenu), async (req: RequestBod
         return res.status(200).json(newEntry);
     } catch (error) {
         if (error.message === "EmptyResponse")
-        return res.sendStatus(404)
-      else
-        return res.status(500).send(error)
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -402,19 +402,26 @@ router.post(menudrinks, validateBody(_schema.IDrinkMenu), async (req: RequestBod
  *   put:
  *     summary: Update a menu drink by menu drink id
  *     tags: [MenuDrinks]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The menu drink id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/MenuDrink'
+ *             $ref: '#/components/schemas/MenuDrinkPost'
  *     responses:
  *       200:
  *         description: The menu drink was successfully updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/MenuDrink'
+ *               $ref: '#/components/schemas/MenuDrinkPost'
  *       500:
  *         description: Some server error
  */
@@ -429,9 +436,9 @@ router.put(menudrinks + "/:id", async (req: Request, res: Response) => {
         return res.status(200).json(newEntry);
     } catch (error) {
         if (error.message === "EmptyResponse")
-        return res.sendStatus(404)
-      else
-        return res.status(500).send(error)
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 
@@ -466,9 +473,9 @@ router.delete(menudrinks + "/:id", async (req: Request, res: Response) => {
         return res.status(200).end();
     } catch (error) {
         if (error.message === "EmptyResponse")
-        return res.sendStatus(404)
-      else
-        return res.status(500).send(error)
+            return res.sendStatus(404)
+        else
+            return res.status(500).send(error)
     }
 });
 

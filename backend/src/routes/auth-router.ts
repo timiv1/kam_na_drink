@@ -110,7 +110,7 @@ router.post('/register', async (req: Request, res: Response) => {
 
             const newEntry = await new User().save(newUser);
             logging.info(NAMESPACE, `User with id ${newEntry.id} inserted.`);
-            return res.status(201).json(newEntry);
+            return res.status(200).json(newEntry);
 
         } catch (error) {
             logging.error(NAMESPACE, error.message, error);

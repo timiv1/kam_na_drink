@@ -31,8 +31,6 @@ export interface IDrinkUser {
 
 export interface IDrink {
     name: string;
-    price: number;
-    year: number;
     volume: number;
     alcohol: number;
     description: string;
