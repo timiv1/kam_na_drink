@@ -314,6 +314,12 @@ router.get("/:id"+ menudrinks, async (req: Request, res: Response) => {
  *     summary: Get the menu drinks by drink_type_id and menu_id
  *     parameters:
  *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: The menu_id
+ *      - in: path
  *        name: drink_type_id
  *        schema:
  *          type: integer
