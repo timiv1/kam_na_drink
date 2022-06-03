@@ -60,7 +60,8 @@ app.use((err: Error | CustomError, _: Request, res: Response, __: NextFunction) 
 const PORT = process.env.PORT || 300;
 
 app.use('/api', apiRouter);
-const options = {
+
+const swaggerSpec = swaggerJsdoc({
   definition: {
     openapi: '3.0.0',
     info: {
@@ -72,30 +73,31 @@ const options = {
         name: 'MIT',
         url: 'https://spdx.org/licenses/MIT.html',
       },
-    components: {
-      securitySchemes: {
-          bearerAuth: {
-              type: 'http',
-              scheme: 'bearer',
-              bearerFormat: 'JWT',
-          }
+      components: {
+        securitySchemes: {
+          jwt: {
+            type: "http",
+            scheme: "bearer",
+            in: "header",
+            bearerFormat: "JWT"
+          },
+        }
       }
     },
-    },
+    security: [{
+      jwt: []
+    }],
     servers: [
       {
         url: `http://localhost:${PORT}/`,
       },
     ],
   },
-  apis: ['./src/routes/*'],
-};
+  swagger: "2.0",
+  apis: ['./src/routes/*']
+});
 
-//const specs = swaggerJsdoc(options);
-//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
-const specs = (swaggerJsdoc(options));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 // Export here and start in a diff file (for testing).
