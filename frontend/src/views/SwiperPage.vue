@@ -7,7 +7,7 @@
             id="map"
             v-show="showMap"
           ></capacitor-google-map>
-          <h4>{{ getCloseByBars.result }}</h4>
+          <h4>{{ getCloseByBars }}</h4>
           <h4>{{ getBars.result }}</h4>
         </home-page>
       </swiper-slide>
@@ -26,7 +26,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import useMap from "../composables/useMap";
 import useAxios from "../composables/useAxios";
 
-import { GoogleMap } from "@capacitor/google-maps";
+import { GoogleMap, Marker } from "@capacitor/google-maps";
 import { Geolocation, Position } from "@capacitor/geolocation";
 // Import Swiper styles
 import "swiper/css";
@@ -64,12 +64,23 @@ export default defineComponent({
     //     `location/${coordinates.coords.latitude}/${coordinates.coords.longitude}`
     //   )
     // );
-    this.getCloseByBars.get(
+    await this.getCloseByBars.get(
       `location/${coordinates.coords.latitude}/${coordinates.coords.longitude}`
     );
-
-    this.getBars.get(`bars`);
-    console.log(this.getCloseByBars.result);
+    // Change objects to be compatable with type Marker
+    let markers: Array<Marker> = [];
+    console.log("result");
+    console.log(this.getCloseByBars.result.value);
+    // if (this.getCloseByBars.result)
+    //   this.getCloseByBars.result.value?.forEach((location: any) => {
+    //     markers.push({
+    //       coordinate: {
+    //         lat: location.lat,
+    //         lng: location.long,
+    //       },
+    //     });
+    //   });
+    //this.mapInstance?.addMarkers(markers);
   },
   data() {
     return { mapInstance: undefined as GoogleMap | undefined };

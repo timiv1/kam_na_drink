@@ -14,14 +14,18 @@ export default function useAxios() {
     const loading = ref(false)
     const error = ref(null)
 
-    const get = (path: string) => {
+    const get = async (path: string) => {
         loading.value = true
-        serverClient.get(path).then((res) => {
+        await serverClient.get(path).then((res) => {
             result.value = res.data
         }).catch((err) => {
             error.value = err
             console.log(err)
-        }).finally(() => { loading.value = false })
+        }).finally(() => {
+            loading.value = false
+        })
+
+
     }
     const post = (path: string, payload: any) => {
         loading.value = true

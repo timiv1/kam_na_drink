@@ -1,15 +1,19 @@
 <template>
-    <ion-grid fixed>
-      <ion-row>
-        <ion-col size="6">{{ borovnicke }}</ion-col>
-        <ion-col size="6"></ion-col>
-      </ion-row>
-    </ion-grid>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="6">{{ borovnicke }}</ion-col>
+      <h1>Profil</h1>
+      // tukaj pride profil Ime + nek avatar najljubši lokal/pijača (+urejanje)
+      {{ profil.result }}
+      <ion-col size="6"></ion-col>
+    </ion-row>
+  </ion-grid>
 </template>
 <script lang="ts">
 import { mapState } from "vuex";
 import { defineComponent } from "vue";
 import { IonGrid, IonRow, IonCol } from "@ionic/vue";
+import useAxios from "../composables/useAxios";
 
 export default defineComponent({
   name: "ProfilePage",
@@ -20,7 +24,11 @@ export default defineComponent({
     IonGrid,
     IonRow,
     IonCol,
-    
+  },
+  async setup() {
+    let profil = useAxios();
+    await profil.get(`mypath`);
+    return { profil };
   },
 });
 </script>
