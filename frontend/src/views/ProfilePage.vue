@@ -1,10 +1,18 @@
 <template>
   <ion-grid fixed>
     <ion-row>
-      <ion-col size="6">{{ borovnicke }}</ion-col>
-      <h1>Profil</h1>
-      // tukaj pride profil Ime + nek avatar najljubši lokal/pijača (+urejanje)
-      <ion-col size="6"></ion-col>
+      <h1>Profile</h1>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <!-- {{ borovnicke }} -->
+        <!-- tukaj pride profil Ime + nek avatar najljubši lokal/pijača (+urejanje) -->
+        <ion-list v-if="userBars.result != null" >
+          <ion-item :key="item" v-for="item in userBars.result.value">
+            <ion-label>{{item}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
     </ion-row>
   </ion-grid>
 </template>
@@ -25,15 +33,13 @@ export default defineComponent({
     IonCol,
   },
   setup() {
-    let profile = useAxios();
-    // await profil.get(`mypath`);
-    return { profile };
+    let userBars = useAxios();
+    const userId = 1; //set userId here
+    return { userBars, userId };
   },
-  created() {
-    //call api,
-    // e.g.
-    // this.profile.get(`path`);
-    console.log("PROFIL KREIRAN");
+  async created() {
+    console.log("Created ProfilePage")
+    await this.userBars.get(`users/${this.userId}/userbars`)
   },
 });
 </script>
