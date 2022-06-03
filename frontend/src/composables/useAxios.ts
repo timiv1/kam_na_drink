@@ -10,7 +10,7 @@ const serverClient: AxiosInstance = axios.create({
 });
 
 export default function useAxios() {
-    const result = ref(null)
+    const result = ref<any>(null)
     const loading = ref(false)
     const error = ref(null)
 

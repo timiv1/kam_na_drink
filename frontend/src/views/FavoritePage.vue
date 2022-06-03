@@ -6,9 +6,15 @@
     <ion-row>
       <ion-col>
         <h2>Drinks:</h2>
-        <ion-list v-if="show">
-          <ion-item button @click="openDrinkModal(item.drink_id, item.id)" :key="item.id" v-for="item in userDrinks">
+        <ion-list v-if="!getUserDrinks.loading.value">
+          <ion-item
+            button
+            @click="openDrinkModal(item.drink_id, item.id)"
+            :key="item.id"
+            v-for="item in getUserDrinks.result.value"
+          >
             <ion-label>{{ capitalize(item.drinks.name) }}</ion-label>
+            <!-- <ion-label>{{ capitalize(item.drinks.name) }}</ion-label> -->
           </ion-item>
         </ion-list>
       </ion-col>
@@ -16,8 +22,8 @@
     <ion-row>
       <ion-col>
         <h2>Bars:</h2>
-        <ion-list v-if="show">
-          <ion-item :key="item.id" v-for="item in userBars">
+        <ion-list v-if="!getUserBars.loading.value">
+          <ion-item :key="item.id" v-for="item in getUserBars.result.value">
             <ion-label>{{ item.bars.name }}</ion-label>
           </ion-item>
         </ion-list>
@@ -49,12 +55,10 @@ export default defineComponent({
     IonCol,
     IonList,
     IonItem,
-    IonLabel
+    IonLabel,
   },
   data() {
     return {
-      userBars: [] as any,
-      userDrinks: [] as any,
       show: false,
       dialog: false,
     };
@@ -65,20 +69,16 @@ export default defineComponent({
     const userId = 1; //set userId here
     return { getUserBars, getUserDrinks, userId };
   },
-  async mounted() {
+  mounted() {
     console.log("Created ProfilePage");
-    await this.getUserDrinks.get(`users/${this.userId}/userdrinks`)
-    await this.getUserBars.get(`users/${this.userId}/userbars`);
-
-    this.userBars = this.getUserBars.result.value;
-    this.userDrinks = this.getUserDrinks.result.value;
-    this.show = true;
+    this.getUserDrinks.get(`users/${this.userId}/userdrinks`);
+    this.getUserBars.get(`users/${this.userId}/userbars`);
   },
   methods: {
     capitalize,
     openDrinkModal: (drink_id: string, id: string) => {
-      console.log(id+ " " + drink_id)
-    }
-  }
+      console.log(id + " " + drink_id);
+    },
+  },
 });
 </script>
