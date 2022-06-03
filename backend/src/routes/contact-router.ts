@@ -4,9 +4,7 @@ import { IContact } from '@models/schema_definitions'
 import _schema from '@shared/_schema';
 import validateBody from 'src/middleware/validateBody';
 
-
 const router = Router()
-
 type RequestBody<T> = Request<{}, {}, T>;
 
 /** Contact object
@@ -180,7 +178,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
         if (!id) {
             return res.status(500).send("missing parameter")
         }
-        const contact = await new Contact({ id }).destroy()
+        await new Contact({ id }).destroy()
         return res.sendStatus(200)
 
     } catch (error) {

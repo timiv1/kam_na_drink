@@ -1,5 +1,4 @@
-import StatusCodes from 'http-status-codes';
-import { NextFunction, Request, Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { ParamMissingError } from '@shared/errors';
 import { User } from '@models/user';
 import bcryptjs from 'bcryptjs';
@@ -9,7 +8,6 @@ import extractJWT from 'src/middleware/extractJWT';
 
 const router = Router();
 const NAMESPACE = 'Auth';
-const { CREATED, OK } = StatusCodes;
 
 export const p = {
     get: '/',
@@ -73,7 +71,7 @@ export const p = {
  *               items:
  *                 $ref: '#/components/schemas/userToken'
  */
-router.get('/validateToken', extractJWT, async (req: Request, res: Response, next: NextFunction) => {
+router.get('/validateToken', extractJWT, async (req: Request, res: Response) => {
     logging.info(NAMESPACE, 'Token validated, user authorized.');
     return res.status(200).json({
         message: 'Token(s) validated'
@@ -103,7 +101,7 @@ router.get('/validateToken', extractJWT, async (req: Request, res: Response, nex
 *         description: Some server error
 */
 router.post('/register', async (req: Request, res: Response) => {
-    let { password } = req.body;
+    const { password } = req.body;
     bcryptjs.hash(password, 10, async (hashError, hash) => {
         if (hashError) {
             return res.status(401).json({
@@ -159,9 +157,8 @@ router.post('/register', async (req: Request, res: Response) => {
 */
 
 router.post('/login', async (req: Request, res: Response) => {
-    let password = req.body.password;
-    let email = req.body.email
-
+    const password = req.body.password;
+    const email = req.body.email
     const users = await new User().where({ email: email }).fetchAll();
     const usersJSON = users.toJSON();
 

@@ -9,10 +9,7 @@ import validateBody from 'src/middleware/validateBody';
 
 // Constants
 const router = Router();
-const { CREATED, OK } = StatusCodes;
-
-const drink_types: string = "/drink_types";
-
+const { OK } = StatusCodes;
 type RequestBody<T> = Request<{}, {}, T>;
 
 /** Drinks object

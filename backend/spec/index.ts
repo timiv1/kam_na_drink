@@ -48,7 +48,7 @@ if (options.testFile) {
 
 // Finish
 (async () => {
-    if (!!execResp) {
+    if (execResp) {
         const info = await execResp;
         if (info.overallStatus === 'passed') {
             logger.info('All tests have passed :)');

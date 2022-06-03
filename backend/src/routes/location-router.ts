@@ -217,7 +217,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
         if (!id) {
             return res.status(500).send("missing parameter")
         }
-        const location = await new Location({ id }).destroy()
+        await new Location({ id }).destroy()
         return res.sendStatus(200)
 
     } catch (error) {
@@ -260,39 +260,37 @@ router.delete("/:id", async (req: Request, res: Response) => {
  *         description: The location was not found
  */
 router.get('/:lat' + '/:long', async (req: Request, res: Response) => {
-
     try {
-        NearestCity(parseFloat(req.params.lat), parseFloat(req.params.long));
+    const latitude = parseFloat(req.params.lat)
+    const longitude = parseFloat(req.params.long)
 
-        async function NearestCity(latitude: any, longitude: any) {
-            const locations = await new Location().fetchAll()
+    const locations = await new Location().fetchAll()
 
-            const locationsJSON = locations.toJSON();
-            const result = locationsJSON.map(Object.values);
+    const locationsJSON = locations.toJSON();
+    const result = locationsJSON.map(Object.values);
 
-            for (let index = 0; index < result.length; ++index) { 
-                var dif = PythagorasEquirectangular.PythagorasEquirectangular(latitude, longitude, result[index][5], result[index][6]);
-                result[index].push(dif)
-                console.log(result[index])
-            }
+    for (let index = 0; index < result.length; ++index) { 
+        const dif = PythagorasEquirectangular.PythagorasEquirectangular(latitude, longitude, result[index][5], result[index][6]);
+        result[index].push(dif)
+        console.log(result[index])
+    }
 
-            let citiesSortedByAsc = result.sort((a: any, b: any) => a[7] - b[7])
-            var arrCitiesSorted: { id: Number; title: String; lat: Number; long: Number; distance: Number; }[] = []
+    const citiesSortedByAsc = result.sort((a: any, b: any) => a[7] - b[7])
+    const arrCitiesSorted: { id: number; title: string; lat: number; long: number; distance: number; }[] = []
 
-            citiesSortedByAsc.forEach((element: any[]) => {
-                arrCitiesSorted.push({
-                    'id': element[0],
-                    'title': element[1],
-                    'lat': element[5],
-                    'long': element[6],
-                    'distance': element[7]
-                })
-            });
+    citiesSortedByAsc.forEach((element: any[]) => {
+        arrCitiesSorted.push({
+            'id': element[0],
+            'title': element[1],
+            'lat': element[5],
+            'long': element[6],
+            'distance': element[7]
+        })
+    });
+    return res.status(200).send(arrCitiesSorted);
 
-            return res.status(200).send(arrCitiesSorted);
-        }
     } catch (error) {
-        if (error.message === "EmptyResponse")
+            if (error.message === "EmptyResponse")
             return res.sendStatus(404)
         else
             return res.status(500).send(error)

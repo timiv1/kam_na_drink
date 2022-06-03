@@ -1,11 +1,9 @@
 import { bookshelf } from './bookshelf'
-import { WorkTime } from "./workTime"
 import { Contact } from "./contact"
 import { Location } from "./location"
 import { Menu } from "./menu"
 import { BarUser } from "./bar_user"
 import { WorkTimeBar } from './work_time_bar'
-
 
 const Bar = bookshelf.model("Bar", {
     tableName: 'bars',
@@ -23,8 +21,7 @@ const Bar = bookshelf.model("Bar", {
     },
     menu() {
         return this.hasMany(Menu);
-    }
-    
+    } 
 });
 
 export { Bar };

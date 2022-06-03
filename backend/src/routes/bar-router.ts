@@ -5,9 +5,7 @@ import { IBar } from '@models/schema_definitions'
 import _schema from '@shared/_schema';
 import validateBody from 'src/middleware/validateBody';
 
-var cors = require('cors')
 const router = Router();
-
 type RequestBody<T> = Request<{}, {}, T>;
 
 /** Bar object
@@ -239,7 +237,7 @@ router.post('/', validateBody(_schema.IBar), async (req: RequestBody<IBar>, res:
  */
 router.post('/barworktime', async (req: Request, res: Response) => {
   try {
-    let data = req.body;
+    const data = req.body;
     if (!data) {
       return res.status(500).send("missing parameter")
     }
@@ -335,9 +333,9 @@ router.put("/:id", async (req: Request, res: Response) => {
 // TODO:??? delete worktimes for bar bar/1/work_times odstrani worktime maping
 router.delete('/:barId/work_time/:workTimeBarId', async (req: Request, res: Response) => {
   try {
-    const barId = req.params.barId //???
+    // ??? const barId = req.params.barId
     const id = req.params.workTimeBarId
-    let data = req.body;
+    const data = req.body;
     if (!data) {
       return res.status(500).send("missing parameter")
     }

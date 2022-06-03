@@ -1,4 +1,3 @@
-import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
 import { ParamMissingError } from '@shared/errors';
 import { Menu } from '@models/menu'
@@ -9,10 +8,6 @@ import validateBody from 'src/middleware/validateBody';
 
 // Constants
 const router = Router();
-const { CREATED, OK } = StatusCodes;
-
-const menudrinks: string = "/menudrinks";
-
 type RequestBody<T> = Request<{}, {}, T>;
 
 /** Menu object
@@ -339,7 +334,7 @@ router.get("/:id/menudrinks", async (req: Request, res: Response) => {
  *       404:
  *         description: The drinks were not found
  */
-router.get("/:id" + menudrinks + "/types/:drink_type_id", async (req: Request, res: Response) => {
+router.get("/:id" + "/menudrinks" + "/types/:drink_type_id", async (req: Request, res: Response) => {
     try {
         const id = req.params.id
         const drink_type_id = req.params.drink_type_id
@@ -421,7 +416,7 @@ router.get("/:id" + menudrinks + "/types/:drink_type_id", async (req: Request, r
  *       500:
  *         description: Some server error
  */
-router.post(menudrinks, validateBody(_schema.IDrinkMenu), async (req: RequestBody<IDrinkMenu>, res: Response) => {
+router.post("/menudrinks", validateBody(_schema.IDrinkMenu), async (req: RequestBody<IDrinkMenu>, res: Response) => {
     try {
         const newEntry = await new DrinkMenu().save({
             price: req.body.price,
@@ -466,7 +461,7 @@ router.post(menudrinks, validateBody(_schema.IDrinkMenu), async (req: RequestBod
  *       500:
  *         description: Some server error
  */
-router.put(menudrinks + "/:id", async (req: Request, res: Response) => {
+router.put("/menudrinks" + "/:id", async (req: Request, res: Response) => {
     try {
         const updatedMenuItem = req.body;
         const id = req.params.id
@@ -503,7 +498,7 @@ router.put(menudrinks + "/:id", async (req: Request, res: Response) => {
  *       404:
  *         description: The menu drink was not found
  */
-router.delete(menudrinks + "/:id", async (req: Request, res: Response) => {
+router.delete("/menudrinks" + "/:id", async (req: Request, res: Response) => {
     try {
         const id = req.params.id
         if (!id) {

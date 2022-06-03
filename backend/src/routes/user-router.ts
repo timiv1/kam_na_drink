@@ -10,7 +10,7 @@ import _schema from '@shared/_schema';
 import validateBody from 'src/middleware/validateBody';
 
 const router = Router();
-const { CREATED, OK } = StatusCodes;
+const { OK } = StatusCodes;
 
 type RequestBody<T> = Request<{}, {}, T>;
 

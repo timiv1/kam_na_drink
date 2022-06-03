@@ -190,7 +190,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
         if (!id) {
             return res.status(500).send("missing parameter")
         }
-        const workTime = await new WorkTime({ id }).destroy()
+        await new WorkTime({ id }).destroy()
         return res.sendStatus(200)
 
     } catch (error) {
