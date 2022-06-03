@@ -1,15 +1,17 @@
 <template>
   <base-page title="Kam na drink">
     <swiper :navigation="true" class="page-swiper">
-      <swiper-slide><profile-page> </profile-page> </swiper-slide>
       <swiper-slide
         ><home-page>
           <capacitor-google-map
             id="map"
             v-show="showMap"
           ></capacitor-google-map>
+          <h4>{{ getCloseByBars.result }}</h4>
+          <h4>{{ getBars.result }}</h4>
         </home-page>
       </swiper-slide>
+      <swiper-slide><profile-page> </profile-page> </swiper-slide>
     </swiper>
   </base-page>
 </template>
@@ -20,11 +22,12 @@ import ProfilePage from "./ProfilePage.vue";
 import { mapState } from "vuex";
 import BasePage from "../components/BasePage.vue";
 import { defineComponent } from "vue";
-import { IonGrid, IonRow, IonCol } from "@ionic/vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import useMap from "../composables/useMap";
-import { GoogleMap } from "@capacitor/google-maps";
+import useAxios from "../composables/useAxios";
 
+import { GoogleMap } from "@capacitor/google-maps";
+import { Geolocation, Position } from "@capacitor/geolocation";
 // Import Swiper styles
 import "swiper/css";
 
@@ -33,9 +36,15 @@ export default defineComponent({
 
   components: { ProfilePage, HomePage, BasePage, Swiper, SwiperSlide },
   setup() {
+    const getCloseByBars = useAxios();
+    const getBars = useAxios();
+
     return {
       modules: [Navigation],
+      useAxios,
       useMap,
+      getCloseByBars,
+      getBars,
       GoogleMap,
     };
   },
@@ -43,18 +52,33 @@ export default defineComponent({
   // ionic hook when view is ready
   async ionViewDidEnter() {
     // create map with
-    await useMap().createMap({
+    this.mapInstance = await useMap().createMap({
       lat: 46.40589298093361,
       lng: 14.152709680733068,
     });
+    const coordinates: Position | undefined =
+      await Geolocation.getCurrentPosition();
+    console.log(coordinates);
+    // console.log(
+    //   useAxios().serverClient.get(
+    //     `location/${coordinates.coords.latitude}/${coordinates.coords.longitude}`
+    //   )
+    // );
+    this.getCloseByBars.get(
+      `location/${coordinates.coords.latitude}/${coordinates.coords.longitude}`
+    );
+
+    this.getBars.get(`bars`);
+    console.log(this.getCloseByBars.result);
   },
   data() {
-    return { mapInstance: null };
+    return { mapInstance: undefined as GoogleMap | undefined };
   },
   computed: {
     // TODO on android all backgrounds need to be transperent to show map on a page but than map is also shown in every page.
     // To fix this hide map when on different route or setup backgrounds to be not transparent on other pages.
 
+    // TODO check if you can swipe on mobile when map is rendered
     showMap() {
       return true;
     },

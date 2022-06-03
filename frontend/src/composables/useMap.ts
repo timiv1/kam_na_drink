@@ -15,7 +15,6 @@ export default function useMap() {
                 forceCreate: true,
             };
 
-
             const theMap = await GoogleMap.create(createMapArgs);
             return theMap;
         }
