@@ -262,7 +262,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
 router.get('/:lat' + '/:long', async (req: Request, res: Response) => {
 
     try {
-        NearestCity(parseInt(req.params.lat), parseInt(req.params.long));
+        NearestCity(parseFloat(req.params.lat), parseFloat(req.params.long));
 
         async function NearestCity(latitude: any, longitude: any) {
             const locations = await new Location().fetchAll()
@@ -270,21 +270,22 @@ router.get('/:lat' + '/:long', async (req: Request, res: Response) => {
             const locationsJSON = locations.toJSON();
             const result = locationsJSON.map(Object.values);
 
-            for (let index = 0; index < result.length; ++index) {
-                var dif = PythagorasEquirectangular.PythagorasEquirectangular(latitude, longitude, result[index][6], result[index][7]);
+            for (let index = 0; index < result.length; ++index) { 
+                var dif = PythagorasEquirectangular.PythagorasEquirectangular(latitude, longitude, result[index][5], result[index][6]);
                 result[index].push(dif)
+                console.log(result[index])
             }
 
-            let citiesSortedByAsc = result.sort((a: any, b: any) => a[8] - b[8])
+            let citiesSortedByAsc = result.sort((a: any, b: any) => a[7] - b[7])
             var arrCitiesSorted: { id: Number; title: String; lat: Number; long: Number; distance: Number; }[] = []
 
             citiesSortedByAsc.forEach((element: any[]) => {
                 arrCitiesSorted.push({
                     'id': element[0],
                     'title': element[1],
-                    'lat': element[6],
-                    'long': element[7],
-                    'distance': element[8]
+                    'lat': element[5],
+                    'long': element[6],
+                    'distance': element[7]
                 })
             });
 
