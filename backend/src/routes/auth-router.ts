@@ -44,6 +44,16 @@ export const p = {
  *           description: password of the user
  */
 
+/**
+*  @swagger
+*   components:
+*     securitySchemes:
+*       jwt:      # arbitrary name for the security scheme
+*         type: apiKey
+*         in: header       # can be "header", "query" or "cookie"
+*         name: Authorization  # name of the header, query parameter or cookie
+*/
+
 
 /** Validates the Token
  * @swagger
@@ -51,6 +61,8 @@ export const p = {
  *   get:
  *     summary: Validates the Token
  *     tags: [Authentication]
+ *     security:
+ *	    - jwt: []
  *     responses:
  *       200:
  *         description: Validates the Token
