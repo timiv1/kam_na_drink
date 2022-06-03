@@ -1,6 +1,10 @@
 <template>
   <ion-grid class="full-hight">
     <ion-row>
+      <!-- Animated Searchbar -->
+      <ion-searchbar autocomplete="on" @ionInput="showResults"></ion-searchbar>
+    </ion-row>
+    <ion-row>
       <ion-col size="6"><h3>Close by bars</h3></ion-col>
       <ion-col size="12">
         <slot></slot>
@@ -21,7 +25,7 @@
 <script lang="ts">
 import { mapActions } from "vuex";
 import { defineComponent } from "vue";
-import { IonGrid, IonRow, IonCol, IonButton } from "@ionic/vue";
+import { IonGrid, IonRow, IonCol, IonButton, IonSearchbar } from "@ionic/vue";
 
 export default defineComponent({
   name: "HomePage",
@@ -30,9 +34,13 @@ export default defineComponent({
     IonRow,
     IonCol,
     IonButton,
+    IonSearchbar,
   },
 
   methods: {
+    showResults(event: any) {
+      console.log(event);
+    },
     ...mapActions("auth", ["naZdravje"]),
   },
 });

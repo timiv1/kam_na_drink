@@ -3,7 +3,8 @@
     <ion-row>
       <ion-col size="6">{{ borovnicke }}</ion-col>
       <h1>Profil</h1>
-      // tukaj pride profil Ime + nek avatar najljubši lokal/pijača (+urejanje)
+      // tukaj pride profil Ime + nek avatar pod tem najljubši lokal/pijača
+      (+urejanje)
       <ion-col size="6"></ion-col>
     </ion-row>
   </ion-grid>
