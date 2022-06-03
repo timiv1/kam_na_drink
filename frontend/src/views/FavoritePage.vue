@@ -1,6 +1,9 @@
 <template>
   <ion-grid fixed>
     <ion-row>
+      <h1>Favorites</h1>
+    </ion-row>
+    <ion-row>
       <ion-col>
         <h2>Drinks:</h2>
         <ion-list v-if="show">
@@ -25,6 +28,8 @@
 <script lang="ts">
 import { mapState } from "vuex";
 import { defineComponent } from "vue";
+import useAxios from "../composables/useAxios";
+import { capitalize } from "../composables/capitalize";
 import {
   IonGrid,
   IonRow,
@@ -33,8 +38,6 @@ import {
   IonItem,
   IonLabel,
 } from "@ionic/vue";
-import useAxios from "../composables/useAxios";
-import { capitalize } from "../shared/capitalize";
 export default defineComponent({
   name: "ProfilePage",
   computed: {
