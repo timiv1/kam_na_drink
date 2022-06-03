@@ -18,7 +18,7 @@
 <script lang="ts">
 import { Navigation } from "swiper";
 import HomePage from "./HomePage.vue";
-import FavoritePage from "./FavoritePage.vue";
+import ProfilePage from "./ProfilePage.vue";
 import { mapState } from "vuex";
 import BasePage from "../components/BasePage.vue";
 import { defineComponent } from "vue";
@@ -34,7 +34,7 @@ import "swiper/css";
 export default defineComponent({
   name: "SwiperPage",
 
-  components: { ProfilePage: FavoritePage, HomePage, BasePage, Swiper, SwiperSlide },
+  components: { ProfilePage: ProfilePage, HomePage, BasePage, Swiper, SwiperSlide },
   setup() {
     const getCloseByBars = useAxios();
     const getBars = useAxios();

@@ -1,27 +1,22 @@
 <template>
   <ion-grid fixed>
     <ion-row>
-      <h1>Favorites</h1>
+      <h1>Profile</h1>
     </ion-row>
     <ion-row>
       <ion-col>
-        <h2>Drinks:</h2>
+
+      </ion-col>
+      <ion-col>
+        <h2>Favorites</h2>
+        <h3>Drinks:</h3>
         <ion-list v-if="!getUserDrinks.loading.value">
-          <ion-item
-            button
-            @click="openDrinkModal(item.drink_id, item.id)"
-            :key="item.id"
-            v-for="item in getUserDrinks.result.value"
-          >
+          <ion-item button @click="openDrinkModal(item.drink_id, item.id)" :key="item.id"
+            v-for="item in getUserDrinks.result.value">
             <ion-label>{{ capitalize(item.drinks.name) }}</ion-label>
-            <!-- <ion-label>{{ capitalize(item.drinks.name) }}</ion-label> -->
           </ion-item>
         </ion-list>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <h2>Bars:</h2>
+        <h3>Bars:</h3>
         <ion-list v-if="!getUserBars.loading.value">
           <ion-item :key="item.id" v-for="item in getUserBars.result.value">
             <ion-label>{{ item.bars.name }}</ion-label>
