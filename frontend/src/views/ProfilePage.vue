@@ -4,7 +4,6 @@
       <ion-col size="6">{{ borovnicke }}</ion-col>
       <h1>Profil</h1>
       // tukaj pride profil Ime + nek avatar najljubši lokal/pijača (+urejanje)
-      {{ profil.result }}
       <ion-col size="6"></ion-col>
     </ion-row>
   </ion-grid>
@@ -25,10 +24,16 @@ export default defineComponent({
     IonRow,
     IonCol,
   },
-  async setup() {
-    let profil = useAxios();
-    await profil.get(`mypath`);
-    return { profil };
+  setup() {
+    let profile = useAxios();
+    // await profil.get(`mypath`);
+    return { profile };
+  },
+  created() {
+    //call api,
+    // e.g.
+    // this.profile.get(`path`);
+    console.log("PROFIL KREIRAN");
   },
 });
 </script>

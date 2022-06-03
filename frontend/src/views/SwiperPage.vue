@@ -58,7 +58,6 @@ export default defineComponent({
     });
     const coordinates: Position | undefined =
       await Geolocation.getCurrentPosition();
-    console.log(coordinates);
     // console.log(
     //   useAxios().serverClient.get(
     //     `location/${coordinates.coords.latitude}/${coordinates.coords.longitude}`

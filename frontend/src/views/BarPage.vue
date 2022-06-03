@@ -1,5 +1,5 @@
 <template>
-  <base-page title="Search">
+  <base-page title="Bar">
     <ion-grid fixed>
       <ion-row>
         <ion-col size="6"></ion-col>
