@@ -34,7 +34,13 @@ import "swiper/css";
 export default defineComponent({
   name: "SwiperPage",
 
-  components: { ProfilePage: FavoritePage, HomePage, BasePage, Swiper, SwiperSlide },
+  components: {
+    ProfilePage: FavoritePage,
+    HomePage,
+    BasePage,
+    Swiper,
+    SwiperSlide,
+  },
   setup() {
     const getCloseByBars = useAxios();
     const getBars = useAxios();
@@ -70,16 +76,16 @@ export default defineComponent({
     let markers: Array<Marker> = [];
     console.log("result");
     console.log(this.getCloseByBars.result.value);
-    // if (this.getCloseByBars.result)
-    //   this.getCloseByBars.result.value?.forEach((location: any) => {
-    //     markers.push({
-    //       coordinate: {
-    //         lat: location.lat,
-    //         lng: location.long,
-    //       },
-    //     });
-    //   });
-    //this.mapInstance?.addMarkers(markers);
+    if (this.getCloseByBars.result)
+      this.getCloseByBars.result.value?.forEach((location: any) => {
+        markers.push({
+          coordinate: {
+            lat: location.lat,
+            lng: location.long,
+          },
+        });
+      });
+    this.mapInstance?.addMarkers(markers);
   },
   data() {
     return { mapInstance: undefined as GoogleMap | undefined };
