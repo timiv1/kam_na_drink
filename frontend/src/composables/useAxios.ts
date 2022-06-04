@@ -28,27 +28,27 @@ export default function useAxios() {
 
 
     }
-    const post = (path: string, payload: any) => {
+    const post = async (path: string, payload: any) => {
         loading.value = true
-        serverClient.post(path, payload).then((res) => {
+        await serverClient.post(path, payload).then((res) => {
             result.value = res.data
         }).catch((err) => {
             error.value = err
             console.log(err)
         }).finally(() => { loading.value = false })
     }
-    const put = (path: string, payload: any) => {
+    const put = async (path: string, payload: any) => {
         loading.value = true
-        serverClient.put(path, payload).then((res) => {
+        await serverClient.put(path, payload).then((res) => {
             result.value = res.data
         }).catch((err) => {
             error.value = err
             console.log(err)
         }).finally(() => { loading.value = false })
     }
-    const remove = (path: string) => {
+    const remove = async (path: string) => {
         loading.value = true
-        serverClient.delete(path).then((res) => {
+        await serverClient.delete(path).then((res) => {
             result.value = res.data
         }).catch((err) => {
             error.value = err

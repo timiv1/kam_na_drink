@@ -2,7 +2,14 @@
   <ion-grid class="full-hight">
     <ion-row>
       <!-- Animated Searchbar -->
-      <ion-searchbar autocomplete="on" @ionInput="showResults"></ion-searchbar>
+      <ion-searchbar autocomplete="on" @ionChange="showResults"></ion-searchbar>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item :key="item.id" v-for="item in drinks.result.value">
+          <ion-label>{{item.name}}</ion-label>
+        </ion-item>
+      </ion-col>
     </ion-row>
     <ion-row>
       <ion-col size="6"><h3>Close by bars</h3></ion-col>
@@ -25,7 +32,16 @@
 <script lang="ts">
 import { mapActions } from "vuex";
 import { defineComponent } from "vue";
-import { IonGrid, IonRow, IonCol, IonButton, IonSearchbar } from "@ionic/vue";
+import {
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonButton,
+  IonSearchbar,
+  IonItem,
+  IonLabel,
+} from "@ionic/vue";
+import useAxios from "@/composables/useAxios";
 
 export default defineComponent({
   name: "HomePage",
@@ -35,13 +51,21 @@ export default defineComponent({
     IonCol,
     IonButton,
     IonSearchbar,
+    IonItem,
+    IonLabel,
   },
-
+  setup() {
+    const getDrinks = useAxios();
+    return { getDrinks };
+  },
   methods: {
     showResults(event: any) {
-      console.log(event);
+      console.log(event.target.value);
     },
     ...mapActions("auth", ["naZdravje"]),
+  },
+  created() {
+    this.getDrinks.get("drinks");
   },
 });
 </script>

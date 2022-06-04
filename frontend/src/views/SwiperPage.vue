@@ -7,8 +7,6 @@
             id="map"
             v-show="showMap"
           ></capacitor-google-map>
-          <h4>{{ getCloseByBars }}</h4>
-          <h4>{{ getBars.result }}</h4>
         </home-page>
       </swiper-slide>
       <swiper-slide><profile-page> </profile-page> </swiper-slide>
@@ -25,7 +23,6 @@ import { defineComponent } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import useMap from "../composables/useMap";
 import useAxios from "../composables/useAxios";
-
 import { GoogleMap, Marker } from "@capacitor/google-maps";
 import { Geolocation, Position } from "@capacitor/geolocation";
 // Import Swiper styles
@@ -64,11 +61,6 @@ export default defineComponent({
     });
     const coordinates: Position | undefined =
       await Geolocation.getCurrentPosition();
-    // console.log(
-    //   useAxios().serverClient.get(
-    //     `location/${coordinates.coords.latitude}/${coordinates.coords.longitude}`
-    //   )
-    // );
     await this.getCloseByBars.get(
       `location/${coordinates.coords.latitude}/${coordinates.coords.longitude}`
     );
