@@ -11,10 +11,10 @@
           <ion-label>COUNTRY</ion-label>
         </ion-list-header>
           <ion-item>
-            <ion-label>{{ getBars.result.value.name }}</ion-label>
-            <ion-label>{{ getBars.result.value.location.street }}</ion-label>
-            <ion-label>{{ getBars.result.value.location.city }}</ion-label>
-            <ion-label>{{ getBars.result.value.location.country }}</ion-label>
+            <ion-label >{{ getBars.result.value.name }}</ion-label>
+            <ion-label class="ion-text-wrap">{{ getBars.result.value.location.street }}</ion-label>
+            <ion-label >{{ getBars.result.value.location.city }}</ion-label>
+            <ion-label >{{ getBars.result.value.location.country }}</ion-label>
           </ion-item>
         </ion-list>
         </ion-col>
@@ -28,8 +28,9 @@
           <ion-label>EMAIL</ion-label>
         </ion-list-header>
           <ion-item>
-            <ion-label>{{ getBars.result.value.contact.phone}}</ion-label>
-            <ion-label>{{ getBars.result.value.contact.email}}</ion-label>
+            <!-- mogoče uporabimo class="ion-text-center" ? -->
+            <ion-label >{{ getBars.result.value.contact.phone}}</ion-label>
+            <ion-label >{{ getBars.result.value.contact.email}}</ion-label>
           </ion-item>
         </ion-list>
       </ion-col>
@@ -43,10 +44,16 @@
         <ion-label>FROM</ion-label>
         <ion-label>TO</ion-label>
       </ion-list-header>
-        <ion-item :key="work_times_bars.id" v-for="work_times_bars in getBars.result.value.work_times_bars">
-          <ion-label>{{ work_times_bars.workTime.day }}</ion-label>
-          <ion-label>{{ work_times_bars.workTime.from }}</ion-label>
-          <ion-label>{{ work_times_bars.workTime.to }}</ion-label>
+        <ion-item :key="work_times_bars.id" v-for="work_times_bars in getBars.result.value.work_times_bars">         
+          <!-- If today's date matches corresponding timetable's day it changes its color to blue-->
+          <ion-label color="secondary" v-if="work_times_bars.workTime.day === checkDayNumberWithWeekDay().toString()">{{ work_times_bars.workTime.day }}</ion-label>
+          <ion-label color="secondary" v-if="work_times_bars.workTime.day === checkDayNumberWithWeekDay().toString()">{{ work_times_bars.workTime.from }}</ion-label>
+          <ion-label color="secondary" v-if="work_times_bars.workTime.day === checkDayNumberWithWeekDay().toString()">{{ work_times_bars.workTime.to }}</ion-label>
+       
+          <!-- Else it has normal color !-->
+          <ion-label v-if="work_times_bars.workTime.day != checkDayNumberWithWeekDay().toString()">{{ work_times_bars.workTime.day }}</ion-label>
+          <ion-label v-if="work_times_bars.workTime.day != checkDayNumberWithWeekDay().toString()">{{ work_times_bars.workTime.from }}</ion-label>
+          <ion-label v-if="work_times_bars.workTime.day != checkDayNumberWithWeekDay().toString()">{{ work_times_bars.workTime.to }}</ion-label>
         </ion-item>
       </ion-list>
     </ion-col>
@@ -62,6 +69,8 @@
         <ion-label>ALCOHOL</ion-label>
       </ion-list-header>
         <ion-item :key="drinks.id" v-for="drinks in getBars.result.value.menu[0].drinks">
+
+          <!--  TODO: pogoj če je price == ""   ali   alcohol == null -> da ne izpiše eur oz procentov    -->
           <ion-label>{{ drinks.drink.name }}</ion-label> 
           <ion-label>{{ drinks.drink.volume }}l </ion-label>  
           <ion-label>{{ drinks.price }}€</ion-label>  
@@ -115,6 +124,22 @@ export default defineComponent({
     this.show = true;
   },
   methods: {
+    currentDateTime() {
+      const current = new Date();
+      const date = current.getDay();
+      const dateTime = date
+      return dateTime;
+    },
+    checkDayNumberWithWeekDay() {
+      const dayIndex = new Date().getDay();
+      const getDayName = (dayIndex: number) =>{
+        //TODO: key-value pairs če bomo imeli večjezičnost :)
+        const days = ['ned', 'pon', 'tor', 'sre', 'čet', 'pet', 'sob'];
+        return days[dayIndex];
+      }
+      const dayName = getDayName(dayIndex)
+      return dayName;
+    }	
   }
 });
 </script>
