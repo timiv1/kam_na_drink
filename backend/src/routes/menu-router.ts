@@ -353,11 +353,11 @@ router.get("/:id" + "/menudrinks" + "/types/:drink_type_id", async (req: Request
     }
 });
 
-/** Get all menu drinks by drink_id
+/** Get all menu drinks by drink_id sorted by ascending price (lowest to highest)
  * @swagger
  * /api/menus/menudrinks/drink/{id}:
  *   get:
- *     summary: Get the menu drinks by drink_id
+ *     summary: Get the menu drinks by drink_id sorted by ascending price (lowest to highest)
  *     parameters:
  *      - in: path
  *        name: id
@@ -378,12 +378,11 @@ router.get("/:id" + "/menudrinks" + "/types/:drink_type_id", async (req: Request
  *       404:
  *         description: The menu drinks were not found
  */
- router.get("/menudrinks/drink/:id", async (req: Request, res: Response) => { // THIS IS THE ONE
+ router.get("/menudrinks/drink/:id", async (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        const menu_drinks = await new DrinkMenu().where({ drink_id: id }).fetchAll({
-            withRelated: ["drink", "menu.bars.location"]
-            
+        const menu_drinks = await new DrinkMenu().where({ drink_id: id }).orderBy('price', 'ASC').fetchAll({
+            withRelated: ["drink", "menu.bars.location"]      
         });
         return res.status(200).json(menu_drinks);
     } catch (error) {
