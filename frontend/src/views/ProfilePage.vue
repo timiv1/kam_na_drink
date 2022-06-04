@@ -31,10 +31,12 @@
                 <ion-label>Favorite Drinks</ion-label>
               </ion-item>
               <ion-list slot="content" inset="true" v-if="getUser.result.value">
-                <ion-item button @click="openDrinkModal(drinks.drink_id)" :key="drinks.id"
-                  v-for="drinks in getUser.result.value.drinks">
-                  <ion-label>{{ capitalize(drinks.drink.name) }}</ion-label>
-                  <ion-button slot="end" fill="clear">
+                <ion-item button :key="drinks.id" v-for="drinks in getUser.result.value.drinks">
+                  <div class="ionlabelbuttonfix" @click="openDrinkModal(drinks.drink_id)">
+                    <ion-label>{{ capitalize(drinks.drink.name) }}</ion-label>
+                  </div>
+                  <ion-button @click="presentAlert(capitalize(drinks.drink.name), drinks.id, post, 0)" slot="end"
+                    fill="clear">
                     <ion-icon :icon="close"></ion-icon>
                   </ion-button>
                 </ion-item>
@@ -51,8 +53,14 @@
                 <ion-label>Favorite Bars</ion-label>
               </ion-item>
               <ion-list slot="content" inset="true" v-if="getUser.result.value">
-                <ion-item button @click="goToBar(bars.bar_id)" :key="bars.id" v-for="bars in getUser.result.value.bars">
-                  <ion-label>{{ bars.bar.name }}</ion-label>
+                <ion-item button :key="bars.id" v-for="bars in getUser.result.value.bars">
+                  <div class="ionlabelbuttonfix" @click="goToBar(bars.bar_id)">
+                    <ion-label>{{ capitalize(bars.bar.name) }}</ion-label>
+                  </div>
+                  <ion-button @click="presentAlert(capitalize(bars.bar.name), bars.id, post, 1)" slot="end"
+                    fill="clear">
+                    <ion-icon :icon="close"></ion-icon>
+                  </ion-button>
                 </ion-item>
               </ion-list>
             </ion-accordion>
@@ -71,6 +79,7 @@ import useAxios from "../composables/useAxios";
 import { capitalize } from "../composables/capitalize";
 import DrinkModal from "@/components/DrinkModal.vue";
 import { close } from 'ionicons/icons';
+import { alertController } from '@ionic/core'
 import {
   IonGrid,
   IonRow,
@@ -82,6 +91,9 @@ import {
   IonAccordionGroup,
   modalController,
   IonContent,
+  IonButton,
+  IonIcon,
+  IonImg,
 
 } from "@ionic/vue";
 export default defineComponent({
@@ -99,16 +111,14 @@ export default defineComponent({
     IonAccordion,
     IonAccordionGroup,
     IonContent,
-  },
-  data() {
-    return {
-      show: false,
-      dialog: false,
-    };
+    IonButton,
+    IonIcon,
+    IonImg,
   },
   setup() {
     let getUser = useAxios();
     let getDrink = useAxios();
+    let post = useAxios();
     const userId = 1; //set userId here!!!
 
     const openDrinkModal = async (drink_id: string) => {
@@ -135,14 +145,16 @@ export default defineComponent({
         },
       });
       return modal.present()
+
     }
 
     return {
       getUser,
       getDrink,
+      post,
       userId,
       openDrinkModal,
-      close
+      close,
     };
   },
   async mounted() {
@@ -152,7 +164,49 @@ export default defineComponent({
     capitalize,
     goToBar(barId: string) {
       this.$router.push(`/bar/${barId}`);
+    },
+    async presentAlert(drink: string, id: number, axios: any, x: number) {
+      const a = await alertController
+        .create({
+          header: 'Confirmation',
+          cssClass: "my-custom-class",
+          message: `Do you want to unfavorite ${drink}?`,
+          buttons: [{
+            text: 'NO'
+          },
+          {
+            text: 'YES',
+            handler: async () => {
+              if (x == 0) {
+                await axios.remove(`users/userdrinks/${id}`);
+              }
+              else if (x == 1) {
+                await axios.remove(`users/userbars/${id}`);
+              }
+
+            }
+          }],
+        });
+      return a.present();
     }
   },
 });
 </script>
+<style>
+.nontransparent {
+  background-color: rgb(16, 16, 16);
+}
+
+.ionlabelbuttonfix {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+
+.my-custom-class .alert-wrapper {
+  background: rgb(16, 16, 16);
+}
+</style>

@@ -85,8 +85,3 @@ export default defineComponent({
 
 });
 </script>
-<style>
-.nontransparent {
-  background-color: rgb(16, 16, 16);
-}
-</style>
