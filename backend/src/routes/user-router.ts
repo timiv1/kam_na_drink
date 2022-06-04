@@ -205,7 +205,7 @@ router.get('/', async (_: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        const user = await new User({ id }).fetch({ withRelated: "drinks" });
+        const user = await new User({ id }).fetch({ withRelated: ["drinks.drink", "bars.bar"] });
         return res.status(200).json(user);
     } catch (error) {
         if (error.message === "EmptyResponse")
@@ -388,7 +388,7 @@ router.get('/userdrinks/all', extractJWT, async (_: Request, res: Response) => {
 router.get('/:id/userdrinks', async (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        const user_drinks = await new DrinkUser().where({ user_id: id }).fetchAll({ withRelated: "drinks" });
+        const user_drinks = await new DrinkUser().where({ user_id: id }).fetchAll({ withRelated: "drink" });
         return res.status(200).json(user_drinks);
     } catch (error) {
         if (error.message === "EmptyResponse")
@@ -489,7 +489,7 @@ router.delete('/userdrinks/:id', async (req: Request, res: Response) => {
  */
 router.get('/userbars/all', async (_: Request, res: Response) => {
     try {
-        const bars_users = await new BarUser().fetchAll({ withRelated: "bars" });
+        const bars_users = await new BarUser().fetchAll({ withRelated: "bar" });
         return res.status(OK).json({ bars_users: bars_users });
     } catch (error) {
         if (error.message === "EmptyResponse")
@@ -527,7 +527,7 @@ router.get('/userbars/all', async (_: Request, res: Response) => {
 router.get('/:id/userbars', async (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        const users_bars = await new BarUser().where({ user_id: id }).fetchAll({ withRelated: "bars" });
+        const users_bars = await new BarUser().where({ user_id: id }).fetchAll({ withRelated: "bar" });
         return res.status(OK).json(users_bars);
     } catch (error) {
         if (error.message === "EmptyResponse")

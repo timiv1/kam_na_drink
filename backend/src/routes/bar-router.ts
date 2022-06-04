@@ -124,7 +124,7 @@ router.get('/', async (_: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id
-    const bar = await new Bar({ id }).fetch({ withRelated: ["location", "contact", "work_times_bars.workTime"] })
+    const bar = await new Bar({ id }).fetch({ withRelated: ["location", "contact", "work_times_bars.workTime", "menu.drinks.drink"] })
     console.log('bar')
     return res.status(200).send(bar)
   } catch (error) {
