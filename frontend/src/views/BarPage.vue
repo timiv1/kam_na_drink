@@ -115,7 +115,10 @@ export default defineComponent({
   },
   setup() {
     let getBars = useAxios();
-    const barId = 1;
+    //Dinamično za url - poglej @GrujicBard
+    //Mogoče ni najbolj user friendly ampak dela trenutn
+    var url = window.location.pathname;
+    var barId = url.substring(url.lastIndexOf('/') + 1);
     return { getBars, barId };
   },
   async mounted() {
