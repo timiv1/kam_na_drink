@@ -31,7 +31,7 @@
                 <ion-label>Favorite Drinks</ion-label>
               </ion-item>
               <ion-list slot="content" inset="true" v-if="getUser.result.value">
-                <ion-item button @click="openDrinkModal(drinks.drink_id, drinks.id)" :key="drinks.id"
+                <ion-item button @click="openDrinkModal(drinks.drink_id)" :key="drinks.id"
                   v-for="drinks in getUser.result.value.drinks">
                   <ion-label>{{ capitalize(drinks.drink.name) }}</ion-label>
                 </ion-item>
@@ -48,7 +48,7 @@
                 <ion-label>Favorite Bars</ion-label>
               </ion-item>
               <ion-list slot="content" inset="true" v-if="getUser.result.value">
-                <ion-item :key="bars.id" v-for="bars in getUser.result.value.bars">
+                <ion-item button @click="goToBar(bars.bar_id)" :key="bars.id" v-for="bars in getUser.result.value.bars">
                   <ion-label>{{ bars.bar.name }}</ion-label>
                 </ion-item>
               </ion-list>
@@ -58,6 +58,8 @@
       </ion-row>
     </ion-grid>
   </ion-content>
+  <br>
+  <br>
 </template>
 <script lang="ts">
 import { mapState } from "vuex";
@@ -103,9 +105,9 @@ export default defineComponent({
   setup() {
     let getUser = useAxios();
     let getDrink = useAxios();
-    const userId = 1; //set userId here
+    const userId = 1; //set userId here!!!
 
-    const openDrinkModal = async (drink_id: string, id: string) => {
+    const openDrinkModal = async (drink_id: string) => {
       await getDrink.get(`drinks/${drink_id}`);
       let itemName = ""
       if (getDrink.result.value) {
@@ -124,8 +126,9 @@ export default defineComponent({
       const modal = await modalController.create({
         component: DrinkModal,
         componentProps: {
-          itemName: itemName
-        },showBackdrop: true,
+          itemName: itemName,
+          drink_id: drink_id,
+        },
       });
       return modal.present()
     }
@@ -137,11 +140,14 @@ export default defineComponent({
       openDrinkModal,
     };
   },
-  mounted() {
-    this.getUser.get(`users/${this.userId}`);
+  async mounted() {
+    await this.getUser.get(`users/${this.userId}`);
   },
   methods: {
     capitalize,
+    goToBar(barId: string) {
+      this.$router.push(`/bar/${barId}`);
+    }
   },
 });
 </script>
