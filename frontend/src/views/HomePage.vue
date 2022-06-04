@@ -6,7 +6,7 @@
     </ion-row>
     <ion-row>
       <ion-col size="12">
-        <ion-item :key="item.id" v-for="item in drinks.result.value">
+        <ion-item :key="item.id" v-for="item in getDrinks.result.value">
           <ion-label>{{item.name}}</ion-label>
         </ion-item>
       </ion-col>

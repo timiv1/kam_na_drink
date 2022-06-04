@@ -1,15 +1,18 @@
 <template>
   <base-page title="Kam na drink">
     <swiper :navigation="true" class="page-swiper">
-      <swiper-slide
-        ><home-page>
-          <capacitor-google-map
-            id="map"
-            v-show="showMap"
-          ></capacitor-google-map>
-        </home-page>
+      <swiper-slide>
+        <ion-content
+          ><home-page>
+            <capacitor-google-map
+              id="map"
+              v-show="showMap"
+            ></capacitor-google-map> </home-page
+        ></ion-content>
       </swiper-slide>
-      <swiper-slide><profile-page> </profile-page> </swiper-slide>
+      <swiper-slide>
+        <ion-content> <profile-page> </profile-page></ion-content>
+      </swiper-slide>
     </swiper>
   </base-page>
 </template>
@@ -25,13 +28,21 @@ import useMap from "../composables/useMap";
 import useAxios from "../composables/useAxios";
 import { GoogleMap, Marker } from "@capacitor/google-maps";
 import { Geolocation, Position } from "@capacitor/geolocation";
+import { IonContent } from "@ionic/vue";
 // Import Swiper styles
 import "swiper/css";
 
 export default defineComponent({
   name: "SwiperPage",
 
-  components: { ProfilePage: ProfilePage, HomePage, BasePage, Swiper, SwiperSlide },
+  components: {
+    ProfilePage: ProfilePage,
+    HomePage,
+    BasePage,
+    Swiper,
+    SwiperSlide,
+    IonContent,
+  },
   setup() {
     const getCloseByBars = useAxios();
     const getBars = useAxios();
