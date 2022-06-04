@@ -5,7 +5,7 @@
         <h1>Profile</h1>
       </ion-row>
       <ion-row>
-        <ion-img style="width:150px" src="assets\image\user-account-icon.png" />
+        <ion-img style="width:100px" src="assets\image\user-account-icon.png" />
       </ion-row>
       <br>
       <ion-row>
@@ -34,6 +34,9 @@
                 <ion-item button @click="openDrinkModal(drinks.drink_id)" :key="drinks.id"
                   v-for="drinks in getUser.result.value.drinks">
                   <ion-label>{{ capitalize(drinks.drink.name) }}</ion-label>
+                  <ion-button slot="end" fill="clear">
+                    <ion-icon :icon="close"></ion-icon>
+                  </ion-button>
                 </ion-item>
               </ion-list>
             </ion-accordion>
@@ -67,6 +70,7 @@ import { defineComponent } from "vue";
 import useAxios from "../composables/useAxios";
 import { capitalize } from "../composables/capitalize";
 import DrinkModal from "@/components/DrinkModal.vue";
+import { close } from 'ionicons/icons';
 import {
   IonGrid,
   IonRow,
@@ -138,6 +142,7 @@ export default defineComponent({
       getDrink,
       userId,
       openDrinkModal,
+      close
     };
   },
   async mounted() {
