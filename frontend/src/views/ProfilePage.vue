@@ -4,39 +4,55 @@
       <h1>Profile</h1>
     </ion-row>
     <ion-row>
-      <ion-img style="width:150px" src="assets\images\user-account-icon.png" />
+      <ion-img style="width:150px" src="assets\image\user-account-icon.png" />
     </ion-row>
     <br>
     <ion-row>
       <ion-col>
         <ion-list>
           <ion-item>
-            <ion-label>First name:</ion-label>
+            <ion-label v-if="getUser.result.value">First Name: {{ getUser.result.value.first_name }}</ion-label>
           </ion-item>
           <ion-item>
-            <ion-label>Last name:</ion-label>
+            <ion-label v-if="getUser.result.value">Last Name: {{ getUser.result.value.last_name }}</ion-label>
           </ion-item>
           <ion-item>
-            <ion-label>Email:</ion-label>
+            <ion-label v-if="getUser.result.value">Email: {{ getUser.result.value.email }}</ion-label>
           </ion-item>
         </ion-list>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <h3>Favorite Drinks:</h3>
-        <ion-list v-if="!getUserDrinks.loading.value">
-          <ion-item button @click="openDrinkModal(item.drink_id, item.id)" :key="item.id"
-            v-for="item in getUserDrinks.result.value">
-            <ion-label>{{ capitalize(item.drink.name) }}</ion-label>
-          </ion-item>
-        </ion-list>
-        <h3>Favorite Bars:</h3>
-        <ion-list v-if="!getUserBars.loading.value">
-          <ion-item :key="item.id" v-for="item in getUserBars.result.value">
-            <ion-label>{{ item.bar.name }}</ion-label>
-          </ion-item>
-        </ion-list>
+        <ion-accordion-group>
+          <ion-accordion value="drinks">
+            <ion-item slot="header">
+              <ion-label>Favorite Drinks</ion-label>
+            </ion-item>
+            <ion-list slot="content" inset="true" v-if="getUser.result.value">
+              <ion-item button @click="openDrinkModal(drinks.drink_id, drinks.id)" :key="drinks.id"
+                v-for="drinks in getUser.result.value.drinks">
+                <ion-label>{{ capitalize(drinks.drink.name) }}</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-accordion-group>
+          <ion-accordion value="bars">
+            <ion-item slot="header">
+              <ion-label>Favorite Bars</ion-label>
+            </ion-item>
+            <ion-list slot="content" inset="true" v-if="getUser.result.value">
+              <ion-item :key="bars.id" v-for="bars in getUser.result.value.bars">
+                <ion-label>{{ bars.bar.name }}</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-accordion>
+        </ion-accordion-group>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -46,6 +62,7 @@ import { mapState } from "vuex";
 import { defineComponent } from "vue";
 import useAxios from "../composables/useAxios";
 import { capitalize } from "../composables/capitalize";
+import DrinkModal from "@/components/DrinkModal.vue";
 import {
   IonGrid,
   IonRow,
@@ -53,6 +70,10 @@ import {
   IonList,
   IonItem,
   IonLabel,
+  IonAccordion,
+  IonAccordionGroup,
+  modalController,
+
 } from "@ionic/vue";
 export default defineComponent({
   name: "ProfilePage",
@@ -66,6 +87,8 @@ export default defineComponent({
     IonList,
     IonItem,
     IonLabel,
+    IonAccordion,
+    IonAccordionGroup,
   },
   data() {
     return {
@@ -74,24 +97,45 @@ export default defineComponent({
     };
   },
   setup() {
-    let getUserBars = useAxios();
-    let getUserDrinks = useAxios();
     let getUser = useAxios();
+    let getDrink = useAxios();
+    let array = [] as any
     const userId = 1; //set userId here
-    return { getUserBars, getUserDrinks, getUser, userId };
+
+    const openDrinkModal = async (drink_id: string, id: string) => {
+      // getDrink.get(`drinks/${drink_id}`);
+      // var test = getDrink.result.value
+      // console.log("getDrink")
+      // console.log(test)
+      const modal = await modalController.create({
+        component: DrinkModal,
+        componentProps: {
+          name: "test"
+        }
+      });      
+      console.log(id + " " + drink_id);
+      return modal.present()
+    }
+
+    return {
+      getUser,
+      getDrink,
+      userId,
+      openDrinkModal,
+      array,
+    };
   },
   mounted() {
-    console.log("Created ProfilePage");
-    this.getUserDrinks.get(`users/${this.userId}/userdrinks`);
-    this.getUserBars.get(`users/${this.userId}/userbars`);
     this.getUser.get(`users/${this.userId}`);
-    console.log(this.getUser.result.value)
+    console.log("getUser")
+    this.array = this.getUser.result
+    console.log(this.array)
+    this.getDrink.get(`drinks/1`);
+    console.log("getDrink")
+    console.log(this.getDrink.result)
   },
   methods: {
     capitalize,
-    openDrinkModal: (drink_id: string, id: string) => {
-      console.log(id + " " + drink_id);
-    },
   },
 });
 </script>
