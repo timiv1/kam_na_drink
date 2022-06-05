@@ -71,7 +71,7 @@ export default {
     data() {
         return {
             form: {
-                username: "",
+                email: "",
                 password: ""
             }
         };

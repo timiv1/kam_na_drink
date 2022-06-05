@@ -75,9 +75,10 @@ export default {
     data() {
         return {
             form: {
-                username: "",
+                email: "",
                 password: "",
-                name: ""
+                first_name: "",
+                last_name: "",
             }
         };
     },
