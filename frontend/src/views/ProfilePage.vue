@@ -211,9 +211,9 @@ export default defineComponent({
           {
             text: "YES",
             handler: async () => {
-              if (x == 0) {
+              if (x === 0) {
                 await axios.remove(`users/userdrinks/${id}`);
-              } else if (x == 1) {
+              } else if (x === 1) {
                 await axios.remove(`users/userbars/${id}`);
               }
               await this.getUser.get(`users/${this.userId}`);
