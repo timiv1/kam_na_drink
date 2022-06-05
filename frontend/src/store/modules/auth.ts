@@ -1,5 +1,4 @@
 import jwtDecode, { JwtPayload } from "jwt-decode";
-
 const state = () => ({
     authData: {
         token: "",
@@ -39,10 +38,16 @@ const mutations = {
         state.authData = payload
     }
 };
+const getters = {
+    isAuthenticated(state: any) {
+        if (state.authData?.token) { return true } else { return false }
+    }
+}
 
 export default {
     namespaced: true,
     state,
     actions,
     mutations,
+    getters
 };

@@ -43,7 +43,6 @@
 import { defineComponent } from "vue";
 import BasePage from "../components/BasePage.vue";
 import { mapActions } from "vuex";
-import { useRouter } from "vue-router";
 import { logIn, personAdd } from "ionicons/icons";
 import {
   IonCard,
@@ -66,10 +65,9 @@ export default defineComponent({
     BasePage,
   },
   setup() {
-    const router = useRouter();
     const loginUser = useAxios();
     const registerUser = useAxios();
-    return { router, loginUser, registerUser, logIn, personAdd };
+    return { loginUser, registerUser, logIn, personAdd };
   },
   data() {
     return {
@@ -87,6 +85,7 @@ export default defineComponent({
         await this.loginUser.post("auth/login", payload);
         this.login(this.loginUser.result.value);
       }
+      this.$router.push(`/`);
     },
     ...mapActions("auth", ["login"]),
   },
