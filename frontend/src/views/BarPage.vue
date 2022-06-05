@@ -133,9 +133,9 @@
                   :key="drinks.id"
                   v-for="drinks in getBars.result.value.menu[0].drinks">               
                   <ion-label>{{ drinks.drink.name }}</ion-label>
-                  <ion-label>{{ drinks.drink.volume }} l </ion-label>
-                  <ion-label>{{ drinks.price }} €</ion-label>
-                  <ion-label>{{ drinks.drink.alcohol }} %</ion-label>
+                  <ion-label>{{ checkNullAddSign(drinks.drink.volume, ' L') }}</ion-label>
+                  <ion-label>{{ checkNullAddSign(drinks.price,' €') }}</ion-label>
+                  <ion-label>{{ checkNullAddSign(drinks.drink.alcohol, ' %') }}</ion-label>
                 </ion-item>
               </ion-list>
             </ion-accordion>
@@ -225,6 +225,16 @@ export default defineComponent({
       const dayName = getDayName(dayIndex);
       return dayName;
     },
+    checkNullAddSign(item: number, sign: any) {
+      let itemName = "";
+      if (item == null) {
+        itemName = item;
+      }
+      else  {
+        itemName += item + sign;
+      }      
+      return itemName;
+    }
   },
 });
 </script>
