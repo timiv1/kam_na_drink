@@ -17,7 +17,6 @@ export default function useAxios() {
     const get = async (path: string) => {
         loading.value = true
         await serverClient.get(path).then((res) => {
-            console.log(typeof (res.data))
             result.value = res.data
         }).catch((err) => {
             error.value = err

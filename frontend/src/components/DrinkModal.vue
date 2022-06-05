@@ -16,23 +16,30 @@
         <ion-label>{{ description }}</ion-label>
       </ion-item>
     </ion-list>
-    <br>
+    <br />
     <ion-button color="dark" @click="closeModal">Close Modal</ion-button>
   </ion-content>
 </template>
 
 <script lang="ts">
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, modalController } from "@ionic/vue";
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonButton,
+  modalController,
+} from "@ionic/vue";
 import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "DrinkModal",
   components: { IonContent, IonHeader, IonTitle, IonToolbar, IonButton },
   props: {
-    name: { type: String, default: 'Name' },
-    volume: { type: String, default: 'Volume' },
-    alcohol: { type: String, default: 'Alcohol' },
-    description: { type: String, default: '' },
+    name: { type: String, default: "Name" },
+    volume: { type: String, default: "Volume" },
+    alcohol: { type: String, default: "Alcohol" },
+    description: { type: String, default: "" },
   },
   setup() {
     const closeModal = () => {
