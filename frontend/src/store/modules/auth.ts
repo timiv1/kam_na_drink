@@ -1,17 +1,43 @@
+import jwtDecode, { JwtPayload } from "jwt-decode";
+
 const state = () => ({
-    borovnicke: 0
+    authData: {
+        token: "",
+        tokenExp: "",
+        id: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+    },
 });
 
 const actions = {
-    async naZdravje({ commit }: any, payload: number) {
-        commit('pristejBorovnicke', payload)
+    async login({ commit }: any, loginData: any) {
+        if (loginData != null) {
+            const token = loginData.token
+            const user = loginData.user
+            const decoded = jwtDecode<JwtPayload>(token);
+            const payload = {
+                token: token,
+                tokenExp: decoded.exp,
+                id: user.id,
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email,
+
+            }
+            console.log('In signin')
+            console.log('decoded')
+            console.log(decoded)
+            commit('setLoginData', payload)
+        }
     }
 };
 
 const mutations = {
-    pristejBorovnicke(state: any, payload: number) {
-        state.borovnicke = state.borovnicke + 1
-    },
+    setLoginData(state: any, payload: any) {
+        state.authData = payload
+    }
 };
 
 export default {
