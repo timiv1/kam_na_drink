@@ -5,20 +5,29 @@
         <h1>Profile</h1>
       </ion-row>
       <ion-row>
-        <ion-img style="width:100px" src="assets\image\user-account-icon.png" />
+        <ion-img
+          style="width: 100px"
+          src="assets\image\user-account-icon.png"
+        />
       </ion-row>
-      <br>
+      <br />
       <ion-row>
         <ion-col>
           <ion-list>
             <ion-item>
-              <ion-label v-if="getUser.result.value">First Name: {{ getUser.result.value.first_name }}</ion-label>
+              <ion-label v-if="getUser.result.value"
+                >First Name: {{ getUser.result.value.first_name }}</ion-label
+              >
             </ion-item>
             <ion-item>
-              <ion-label v-if="getUser.result.value">Last Name: {{ getUser.result.value.last_name }}</ion-label>
+              <ion-label v-if="getUser.result.value"
+                >Last Name: {{ getUser.result.value.last_name }}</ion-label
+              >
             </ion-item>
             <ion-item>
-              <ion-label v-if="getUser.result.value">Email: {{ getUser.result.value.email }}</ion-label>
+              <ion-label v-if="getUser.result.value"
+                >Email: {{ getUser.result.value.email }}</ion-label
+              >
             </ion-item>
           </ion-list>
         </ion-col>
@@ -31,12 +40,29 @@
                 <ion-label>Favorite Drinks</ion-label>
               </ion-item>
               <ion-list slot="content" inset="true" v-if="getUser.result.value">
-                <ion-item button :key="drinks.id" v-for="drinks in getUser.result.value.drinks">
-                  <div class="ionlabelbuttonfix" @click="openDrinkModal(drinks.drink_id)">
+                <ion-item
+                  button
+                  :key="drinks.id"
+                  v-for="drinks in getUser.result.value.drinks"
+                >
+                  <div
+                    class="ionlabelbuttonfix"
+                    @click="openDrinkModal(drinks.drink_id)"
+                  >
                     <ion-label>{{ capitalize(drinks.drink.name) }}</ion-label>
                   </div>
-                  <ion-button @click="presentAlert(capitalize(drinks.drink.name), drinks.id, post, 0)" slot="end"
-                    fill="clear">
+                  <ion-button
+                    @click="
+                      presentAlert(
+                        capitalize(drinks.drink.name),
+                        drinks.id,
+                        post,
+                        0
+                      )
+                    "
+                    slot="end"
+                    fill="clear"
+                  >
                     <ion-icon :icon="close"></ion-icon>
                   </ion-button>
                 </ion-item>
@@ -53,12 +79,21 @@
                 <ion-label>Favorite Bars</ion-label>
               </ion-item>
               <ion-list slot="content" inset="true" v-if="getUser.result.value">
-                <ion-item button :key="bars.id" v-for="bars in getUser.result.value.bars">
+                <ion-item
+                  button
+                  :key="bars.id"
+                  v-for="bars in getUser.result.value.bars"
+                >
                   <div class="ionlabelbuttonfix" @click="goToBar(bars.bar_id)">
                     <ion-label>{{ capitalize(bars.bar.name) }}</ion-label>
                   </div>
-                  <ion-button @click="presentAlert(capitalize(bars.bar.name), bars.id, post, 1)" slot="end"
-                    fill="clear">
+                  <ion-button
+                    @click="
+                      presentAlert(capitalize(bars.bar.name), bars.id, post, 1)
+                    "
+                    slot="end"
+                    fill="clear"
+                  >
                     <ion-icon :icon="close"></ion-icon>
                   </ion-button>
                 </ion-item>
@@ -69,8 +104,8 @@
       </ion-row>
     </ion-grid>
   </ion-content>
-  <br>
-  <br>
+  <br />
+  <br />
 </template>
 <script lang="ts">
 import { mapState } from "vuex";
@@ -78,8 +113,8 @@ import { defineComponent } from "vue";
 import useAxios from "../composables/useAxios";
 import { capitalize } from "../composables/capitalize";
 import DrinkModal from "@/components/DrinkModal.vue";
-import { close, informationCircle  } from 'ionicons/icons';
-import { alertController } from '@ionic/core'
+import { close, informationCircle } from "ionicons/icons";
+import { alertController } from "@ionic/core";
 import {
   IonGrid,
   IonRow,
@@ -94,8 +129,7 @@ import {
   IonButton,
   IonIcon,
   IonImg,
-  toastController
-
+  toastController,
 } from "@ionic/vue";
 export default defineComponent({
   name: "ProfilePage",
@@ -124,17 +158,17 @@ export default defineComponent({
 
     const openDrinkModal = async (drink_id: string) => {
       await getDrink.get(`drinks/${drink_id}`);
-      let itemName = ""
+      let itemName = "";
       if (getDrink.result.value) {
-        itemName = getDrink.result.value.name
+        itemName = getDrink.result.value.name;
         if (getDrink.result.value.volume != null) {
-          itemName += ", " + getDrink.result.value.volume + "L"
+          itemName += ", " + getDrink.result.value.volume + "L";
         }
         if (getDrink.result.value.alcohol != null) {
-          itemName += ", " + getDrink.result.value.alcohol + "%"
+          itemName += ", " + getDrink.result.value.alcohol + "%";
         }
         if (getDrink.result.value.description != null) {
-          itemName += ", " + getDrink.result.value.description
+          itemName += ", " + getDrink.result.value.description;
         }
       }
 
@@ -145,9 +179,8 @@ export default defineComponent({
           drink_id: drink_id,
         },
       });
-      return modal.present()
-
-    }
+      return modal.present();
+    };
 
     return {
       getUser,
@@ -167,40 +200,39 @@ export default defineComponent({
       this.$router.push(`/bar/${barId}`);
     },
     async presentAlert(item: string, id: number, axios: any, x: number) {
-      const a = await alertController
-        .create({
-          header: 'Confirmation',
-          cssClass: "my-custom-class",
-          message: `Do you want to unfavorite ${item}?`,
-          buttons: [{
-            text: 'NO'
+      const a = await alertController.create({
+        header: "Confirmation",
+        cssClass: "my-custom-class",
+        message: `Do you want to unfavorite ${item}?`,
+        buttons: [
+          {
+            text: "NO",
           },
           {
-            text: 'YES',
+            text: "YES",
             handler: async () => {
               if (x == 0) {
-                // await axios.remove(`users/userdrinks/${id}`);
+                await axios.remove(`users/userdrinks/${id}`);
+              } else if (x == 1) {
+                await axios.remove(`users/userbars/${id}`);
               }
-              else if (x == 1) {
-                // await axios.remove(`users/userbars/${id}`);
-              }
-              this.openToast(item)
-            }
-          }],
-        });
+              await this.getUser.get(`users/${this.userId}`);
+              this.openToast(item);
+            },
+          },
+        ],
+      });
       return a.present();
     },
     async openToast(item: string) {
-      const toast = await toastController
-        .create({
-          message: `${item} was unfavorited.`,
-          duration: 2000
-        })
+      const toast = await toastController.create({
+        message: `${item} was unfavorited.`,
+        duration: 2000,
+      });
       return toast.present();
-    }
+    },
   },
 });
-
 </script>
 <style>
 .nontransparent {
@@ -214,7 +246,6 @@ export default defineComponent({
   align-items: center;
   justify-content: left;
 }
-
 
 .my-custom-class .alert-wrapper {
   background: rgb(16, 16, 16);
