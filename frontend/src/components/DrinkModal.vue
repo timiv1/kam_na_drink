@@ -1,4 +1,5 @@
 <template>
+  <ion-content class="ion-padding nontransparent">
   <ion-header>
     <ion-toolbar>
       <ion-title>
@@ -9,7 +10,6 @@
       </ion-button>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding nontransparent">
     <ion-list v-if="getMenuDrinks.result.value">
       <ion-item button @click="goToBar(item.menu.bar_id)" :key="item.id"
         v-for="item in getMenuDrinks.result.value.slice(0, 5)">
