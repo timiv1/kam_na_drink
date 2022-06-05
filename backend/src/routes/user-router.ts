@@ -576,7 +576,7 @@ router.post('/userbars', validateBody(_schema.IBarUser), async (req: RequestBody
 
 /** Delete a user's bar
  * @swagger
- * /api/users/{id}/userbars:
+ * /api/users/userbars/{id}:
  *   delete:
  *     summary: Delete a user's bar
  *     tags: [UserBars]
@@ -586,7 +586,7 @@ router.post('/userbars', validateBody(_schema.IBarUser), async (req: RequestBody
  *         schema:
  *           type: integer
  *         required: true
- *         description: The user id
+ *         description: The user's bar id
  * 
  *     responses:
  *       200:
@@ -594,7 +594,7 @@ router.post('/userbars', validateBody(_schema.IBarUser), async (req: RequestBody
  *       404:
  *         description: The user bar was not found
  */
-router.delete('/:id/userbars', async (req: Request, res: Response) => {
+router.delete('/userbars/:id', async (req: Request, res: Response) => {
     try {
         const id = req.params.id
         if (!id) {

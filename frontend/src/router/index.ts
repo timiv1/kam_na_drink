@@ -12,8 +12,20 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/SwiperPage.vue')
   },
   {
+    path: '/profile',
+    component: () => import('@/views/ProfilePage.vue')
+  },
+  {
     path: '/bar/:id',
     component: () => import('@/views/BarPage.vue')
+  },
+  {
+    path: '/signin',
+    component: () => import('@/views/SignInPage.vue')
+  },
+  {
+    path: '/signup',
+    component: () => import('@/views/SignUpPage.vue')
   },
 
   // {
