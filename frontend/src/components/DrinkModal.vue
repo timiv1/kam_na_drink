@@ -19,7 +19,6 @@
         </ion-label>
       </ion-item>
     </ion-list>
-    <br>
   </ion-content>
 </template>
 

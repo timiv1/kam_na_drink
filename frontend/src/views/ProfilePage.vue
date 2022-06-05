@@ -104,15 +104,13 @@
       </ion-row>
     </ion-grid>
   </ion-content>
-  <br />
-  <br />
 </template>
 <script lang="ts">
 import { mapState } from "vuex";
 import { defineComponent } from "vue";
 import useAxios from "../composables/useAxios";
 import { capitalize } from "../composables/capitalize";
-import DrinkModal from "@/components/DrinkModal.vue";
+import DrinkModal from "../components/DrinkModal.vue";
 import { close, informationCircle } from "ionicons/icons";
 import { alertController } from "@ionic/core";
 import {
