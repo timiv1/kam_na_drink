@@ -1,6 +1,6 @@
 export const checkNullAddSign = (item: number, sign: any): string => {
     let itemName = "";
-    if (item == null) {
+    if (item == null || item === undefined) {
       itemName = item;
     }
     else  {

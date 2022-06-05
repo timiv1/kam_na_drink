@@ -39,8 +39,10 @@
         v-for="item in filteredDrinks"
         @click="displayBarsWithDrink(item)"
       >
-        <ion-label>{{
-          `${item.name} ${checkNullAddSign(item.volume, "L")}`
+        <ion-label>{{ 
+        item.volume === null ?
+        item.name + ' ' :
+        item.name + ' ' + checkNullAddSign(item.volume, " L")       
         }}</ion-label>
       </ion-item>
     </ion-list>
@@ -208,8 +210,12 @@ export default defineComponent({
     },
 
     displayBarsWithDrink(item: any) {
-      this.searchValue = `${item.name} ${item.volume}L`;
-
+      if(item.volume === null){
+        this.searchValue = item.name
+      }
+      else{
+        this.searchValue = item.name + ' ' + checkNullAddSign(item.volume, " L")
+      }
       this.getBarsWithDrink.get(`menus/menudrinks/drink/${item.id}`);
     },
 
