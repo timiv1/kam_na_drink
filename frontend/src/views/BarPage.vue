@@ -197,8 +197,6 @@ export default defineComponent({
   },
   setup() {
     let getBars = useAxios();
-    //Dinamično za url - poglej @GrujicBard
-    //Mogoče ni najbolj user friendly ampak dela trenutn
     var url = window.location.pathname;
     var barId = url.substring(url.lastIndexOf("/") + 1);
     return { getBars, barId };
@@ -218,7 +216,6 @@ export default defineComponent({
     checkDayNumberWithWeekDay() {
       const dayIndex = new Date().getDay();
       const getDayName = (dayIndex: number) => {
-        //TODO: key-value pairs če bomo imeli večjezičnost :)
         const days = ["ned", "pon", "tor", "sre", "čet", "pet", "sob"];
         return days[dayIndex];
       };

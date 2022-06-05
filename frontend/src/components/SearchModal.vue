@@ -87,6 +87,7 @@ import {
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import useAxios from "@/composables/useAxios";
+import { checkNullAddSign } from "../composables/checkNullAddSign";
 import { ref, onMounted, nextTick } from "vue";
 import { wineOutline, homeOutline } from "ionicons/icons";
 
@@ -143,9 +144,8 @@ export default defineComponent({
   },
   computed: {
     filteredDrinks(): any {
-      //TODO filter with all lower-case on all lower-case
       if (!this.getDrinks.loading.value) {
-        const filter = this.searchValue;
+        const filter = this.searchValue.toLowerCase();
         const filteredDrinks = this.getDrinks.result.value.filter(
           (drink: any) => {
             return drink.name.includes(filter);
@@ -155,9 +155,8 @@ export default defineComponent({
       } else return [];
     },
     filteredBars(): any {
-      //TODO filter with all lower-case on all lower-case
       if (!this.getBars.loading.value) {
-        const filter = this.searchValue;
+        const filter = this.searchValue.toLowerCase();
         const filteredBar = this.getBars.result.value.filter((bar: any) => {
           return bar.name.includes(filter);
         });
@@ -228,14 +227,17 @@ export default defineComponent({
     search(event: any) {
       console.log(event?.target.value);
     },
+
     displayBarsWithDrink(item: any) {
       this.searchValue = `${item.name} ${item.volume}L`;
+
       this.getBarsWithDrink.get(`menus/menudrinks/drink/${item.id}`);
     },
+
     goToBarPage(id: string | number) {
       this.$router.push(`/bar/${id}`);
       modalController.dismiss();
-    },
+    }
   },
 });
 </script>
