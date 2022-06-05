@@ -92,8 +92,7 @@
                     <ion-label>FROM</ion-label>
                     <ion-label>TO</ion-label>
                   </ion-list-header>
-                  <ion-item
-                    button
+                  <ion-item                  
                     :key="work_times_bars.id"
                     v-for="work_times_bars in getBars.result.value
                       .work_times_bars"
@@ -175,8 +174,7 @@
                     <ion-label>PRICE</ion-label>
                     <ion-label>ALCOHOL</ion-label>
                   </ion-list-header>
-                  <ion-item
-                    button
+                  <ion-item                    
                     :key="drinks.id"
                     v-for="drinks in getBars.result.value.menu[0].drinks"
                   >
