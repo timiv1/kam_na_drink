@@ -19,6 +19,14 @@ const routes: Array<RouteRecordRaw> = [
     path: '/bar/:id',
     component: () => import('@/views/BarPage.vue')
   },
+  {
+    path: '/signin',
+    component: () => import('@/views/SignInPage.vue')
+  },
+  {
+    path: '/signup',
+    component: () => import('@/views/SignUpPage.vue')
+  },
 
   // {
   //   path: '/',
