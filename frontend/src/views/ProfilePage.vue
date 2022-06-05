@@ -78,7 +78,7 @@ import { defineComponent } from "vue";
 import useAxios from "../composables/useAxios";
 import { capitalize } from "../composables/capitalize";
 import DrinkModal from "@/components/DrinkModal.vue";
-import { close } from 'ionicons/icons';
+import { close, informationCircle  } from 'ionicons/icons';
 import { alertController } from '@ionic/core'
 import {
   IonGrid,
@@ -94,6 +94,7 @@ import {
   IonButton,
   IonIcon,
   IonImg,
+  toastController
 
 } from "@ionic/vue";
 export default defineComponent({
@@ -165,12 +166,12 @@ export default defineComponent({
     goToBar(barId: string) {
       this.$router.push(`/bar/${barId}`);
     },
-    async presentAlert(drink: string, id: number, axios: any, x: number) {
+    async presentAlert(item: string, id: number, axios: any, x: number) {
       const a = await alertController
         .create({
           header: 'Confirmation',
           cssClass: "my-custom-class",
-          message: `Do you want to unfavorite ${drink}?`,
+          message: `Do you want to unfavorite ${item}?`,
           buttons: [{
             text: 'NO'
           },
@@ -178,19 +179,28 @@ export default defineComponent({
             text: 'YES',
             handler: async () => {
               if (x == 0) {
-                await axios.remove(`users/userdrinks/${id}`);
+                // await axios.remove(`users/userdrinks/${id}`);
               }
               else if (x == 1) {
-                await axios.remove(`users/userbars/${id}`);
+                // await axios.remove(`users/userbars/${id}`);
               }
-
+              this.openToast(item)
             }
           }],
         });
       return a.present();
+    },
+    async openToast(item: string) {
+      const toast = await toastController
+        .create({
+          message: `${item} was unfavorited.`,
+          duration: 2000
+        })
+      return toast.present();
     }
   },
 });
+
 </script>
 <style>
 .nontransparent {
