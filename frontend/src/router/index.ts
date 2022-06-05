@@ -20,8 +20,8 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/BarPage.vue')
   },
   {
-    path: '/signin',
-    component: () => import('@/views/SignInPage.vue')
+    path: '/login',
+    component: () => import('@/views/LoginPage.vue')
   },
   {
     path: '/signup',

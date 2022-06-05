@@ -39,7 +39,9 @@
         v-for="item in filteredDrinks"
         @click="displayBarsWithDrink(item)"
       >
-        <ion-label>{{ `${item.name} ${item.volume}L` }}</ion-label>
+        <ion-label>{{
+          `${item.name} ${checkNullAddSign(item.volume, "L")}`
+        }}</ion-label>
       </ion-item>
     </ion-list>
     <!-- result display for bars with drinks -->
@@ -115,22 +117,13 @@ export default defineComponent({
 
     // const isOpenRef = ref<boolean>(false);
     const data = { content: "New Content" };
-    const searchbar = ref<any>(null);
-    onMounted(() => {
-      nextTick(() => {
-        console.log("PRIKAZAN SEARCH MODAL NEXT TICK");
-        console.log(searchbar.value);
-        const searchbarElement = searchbar.value.$el;
-        console.log(searchbarElement.childNodes[0]);
-        // searchbar.value.$el.firstChild.firstChild.focus();
-      });
-    });
+
     return {
       getDrinks,
       getBarsWithDrink,
       getBars,
       data,
-      searchbar,
+      checkNullAddSign,
       wineOutline,
       homeOutline,
     };
@@ -200,20 +193,6 @@ export default defineComponent({
       return "search";
     },
   },
-  //   mounted() {
-  //     console.log("PRIKAZAN SEARCH MODAL");
-  //     // if (document) document.getElementById("searchbar").focus();
-  //     // this.$nextTick(() => {
-  //     //   this.searchbar.value.$el.focus();
-  //     // });
-  //     this.$nextTick(() => {
-  //       console.log("PRIKAZAN SEARCH MODAL NEXT TICK");
-
-  //       const editButtonRef = this.$refs.searchbar as any;
-  //       editButtonRef.focus();
-  //     });
-  //     console.log(this.searchbar.value);
-  //   },
   methods: {
     setSerachMode(mode: string) {
       if (mode == "drink") {
@@ -237,7 +216,7 @@ export default defineComponent({
     goToBarPage(id: string | number) {
       this.$router.push(`/bar/${id}`);
       modalController.dismiss();
-    }
+    },
   },
 });
 </script>
