@@ -27,29 +27,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/signup',
     component: () => import('@/views/SignUpPage.vue')
   },
-
-  // {
-  //   path: '/',
-  //   component: TabsPage,
-  //   children: [
-  //     {
-  //       path: '',
-  //       redirect: '/'
-  //     },
-  //     {
-  //       path: 'profile',
-  //       component: () => import('@/views/ProfilePage.vue')
-  //     },
-  //     {
-  //       path: 'home',
-  //       component: () => import('@/views/HomePage.vue')
-  //     },
-  //     {
-  //       path: 'search',
-  //       component: () => import('@/views/SearchPage.vue')
-  //     }
-  //   ]
-  // }
 ]
 
 const router = createRouter({
@@ -58,15 +35,16 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
-  console.log(to.path)
-  if (to.path == '/login' || to.name == '/signup') {
+  if (to.path == '/login' || to.path == '/signup') {
     return true
   }
-  const isAuthenticated = store.getters['auth/isAuthenticated']
-  console.log(`Ali je ali ni? ${isAuthenticated}`)
-  if (isAuthenticated)
-    return true
-  else return { path: '/login' }
+  else {
+    const isAuthenticated = store.getters['auth/isAuthenticated']
+    console.log(`Ali je ali ni? ${isAuthenticated}`)
+    if (isAuthenticated)
+      return true
+    else return { path: '/login' }
+  }
 
 })
 

@@ -1,12 +1,12 @@
 import jwtDecode, { JwtPayload } from "jwt-decode";
 const state = () => ({
     authData: {
-        token: "",
-        tokenExp: "",
-        id: "",
-        firstName: "",
-        lastName: "",
-        email: "",
+        token: null,
+        tokenExp: null,
+        id: null,
+        firstName: null,
+        lastName: null,
+        email: null,
     },
 });
 
@@ -30,17 +30,35 @@ const actions = {
             console.log(decoded)
             commit('setLoginData', payload)
         }
+    },
+    async logout({ commit }: any) {
+        commit('setLogoutData')
     }
 };
 
 const mutations = {
     setLoginData(state: any, payload: any) {
         state.authData = payload
+    },
+    setLogoutData(state: any) {
+        state.authData = {
+            token: null,
+            tokenExp: null,
+            id: null,
+            firstName: null,
+            lastName: null,
+            email: null,
+        }
     }
+
+
 };
 const getters = {
     isAuthenticated(state: any) {
-        if (state.authData?.token) { return true } else { return false }
+        if (state.authData?.token != null) { return true } else { return false }
+    },
+    getAuthToken(state: any) {
+        return state.authData?.token
     }
 }
 

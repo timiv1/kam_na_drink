@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios'
 import { ref } from "vue";
+import store from '../store/index'
 
 const serverClient: AxiosInstance = axios.create({
     baseURL: "http://localhost:3000/api/",
@@ -8,6 +9,20 @@ const serverClient: AxiosInstance = axios.create({
         //'Authorization': 'token <your-token-here> -- https://docs.GitHub.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token'
     },
 });
+
+// Setting Authorization header when logedin
+serverClient.interceptors.request.use(function (config: any) {
+    const token = store.getters['auth/getAuthToken']
+    console.log(token)
+    if (token != null) {
+        config.headers.Authorization = `Bearer ${token}`;
+        console.log('CONFIG')
+        return config;
+    }
+    else
+        return config
+})
+
 
 export default function useAxios() {
     const result = ref<any>(null)
