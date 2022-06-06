@@ -41,6 +41,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
+import useAxios from "../composables/useAxios";
 import BasePage from "../components/BasePage.vue";
 import { mapActions } from "vuex";
 import { logIn, personAdd } from "ionicons/icons";
@@ -51,8 +52,8 @@ import {
   IonButton,
   IonInput,
   IonIcon,
+  alertController,
 } from "@ionic/vue";
-import useAxios from "@/composables/useAxios";
 export default defineComponent({
   name: "LoginPage",
   components: {
@@ -66,24 +67,34 @@ export default defineComponent({
   },
   setup() {
     const loginUser = useAxios();
-    const registerUser = useAxios();
-    return { loginUser, registerUser, logIn, personAdd };
+    return { loginUser, logIn, personAdd };
   },
   data() {
     return {
       form: {
         email: "",
         password: "",
-      },
+      } as any,
     };
   },
-  computed: {},
   methods: {
     async handleLogin() {
-      if (this.form.email != "" && this.form.password) {
+      if (this.form.email != "" && this.form.password != "") {
         const payload = this.form;
         await this.loginUser.post("auth/login", payload);
-        this.login(this.loginUser.result.value);
+        console.log(`error handle login: ${this.loginUser.error.value}`);
+        if (this.loginUser.error.value != null) {
+          const alert = await alertController.create({
+            header: "Error",
+            subHeader: "Login failed",
+            message: "Failed login, please check email and password",
+            buttons: ["OK"],
+            cssClass: "nontransparent",
+          });
+          await alert.present();
+        } else {
+          this.login(this.loginUser.result.value);
+        }
       }
       this.$router.push(`/`);
     },
