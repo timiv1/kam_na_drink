@@ -13,14 +13,25 @@ import extractJWT from 'src/middleware/extractJWT';
 const baseRouter = Router();
 
 //Na koncu projekta bomo kar je zakomentirano obdržali
+// baseRouter.use('/auth', authRouter);
+// baseRouter.use('/users', userRouter);
+// baseRouter.use('/drinks', drinkRouter);
+// baseRouter.use('/bars', barRouter);
+// baseRouter.use("/work_times", workTimeRouter)
+// baseRouter.use("/contacts", contactRouter)
+// baseRouter.use("/location", locationRouter)
+baseRouter.use("/menus", menuRouter)
+
+
+// Secured routes
 baseRouter.use('/auth', authRouter);
-baseRouter.use('/users', userRouter); //baseRouter.use('/users', extractJWT, userRouter);
-baseRouter.use('/drinks', drinkRouter); //baseRouter.use('/drinks',  extractJWT, drinkRouter);
-baseRouter.use('/bars', barRouter); //baseRouter.use('/bars', extractJWT, barRouter);
-baseRouter.use("/work_times", workTimeRouter) //baseRouter.use("/work_times", extractJWT, workTimeRouter)
-baseRouter.use("/contacts", contactRouter) //baseRouter.use("/contacts", extractJWT, contactRouter)
-baseRouter.use("/location", locationRouter) //baseRouter.use("/location", extractJWT, locationRouter)
-baseRouter.use("/menus", menuRouter) //baseRouter.use("/menu", extractJWT, menuRouter)
+baseRouter.use('/users', extractJWT, userRouter);
+baseRouter.use('/drinks', extractJWT, drinkRouter);
+baseRouter.use('/bars', extractJWT, barRouter);
+baseRouter.use("/work_times", extractJWT, workTimeRouter)
+baseRouter.use("/contacts", extractJWT, contactRouter)
+baseRouter.use("/location", extractJWT, locationRouter)
+// baseRouter.use("/menu", extractJWT, menuRouter)
 
 // Export default.
 export default baseRouter;
