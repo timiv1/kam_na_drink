@@ -112,6 +112,7 @@ export default defineComponent({
               subHeader: "Signup Success",
               message: "Your username signup successfully.",
               buttons: ["OK"],
+              cssClass: "custom-alert-class",
             });
             this.form.email = "";
             this.form.first_name = "";

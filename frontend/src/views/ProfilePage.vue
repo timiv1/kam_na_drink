@@ -200,7 +200,7 @@ export default defineComponent({
     async presentAlert(item: string, id: number, axios: any, x: number) {
       const a = await alertController.create({
         header: "Confirmation",
-        cssClass: "my-custom-class",
+        cssClass: "custom-alert-class",
         message: `Do you want to unfavorite ${item}?`,
         buttons: [
           {
@@ -233,9 +233,7 @@ export default defineComponent({
 });
 </script>
 <style>
-.nontransparent {
-  background-color: rgb(16, 16, 16);
-}
+
 
 .ionlabelbuttonfix {
   height: 100%;
@@ -245,7 +243,5 @@ export default defineComponent({
   justify-content: left;
 }
 
-.my-custom-class .alert-wrapper {
-  background: rgb(16, 16, 16);
-}
+
 </style>

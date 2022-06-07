@@ -89,7 +89,7 @@ export default defineComponent({
             subHeader: "Login failed",
             message: "Failed login, please check email and password",
             buttons: ["OK"],
-            cssClass: "nontransparent",
+            cssClass: "custom-alert-class",
           });
           await alert.present();
         } else {

@@ -1,0 +1,6 @@
+.nontransparent {
+    background-color: rgb(16, 16, 16);
+}
+.custom-alert-class .alert-wrapper {
+    background: rgb(16, 16, 16);
+}
