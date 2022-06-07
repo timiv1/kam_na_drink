@@ -80,9 +80,15 @@ export default defineComponent({
             lat: location.lat,
             lng: location.long,
           },
+          title: location.title,
+          snippet: location.title,
         });
       });
     this.mapInstance?.addMarkers(markers);
+    this.mapInstance?.setOnMarkerClickListener((data) => {
+      console.log("map data");
+      console.log(data);
+    });
   },
   data() {
     return { mapInstance: undefined as GoogleMap | undefined };
