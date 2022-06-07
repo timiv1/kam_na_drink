@@ -264,7 +264,7 @@ router.get('/:lat' + '/:long', async (req: Request, res: Response) => {
     const latitude = parseFloat(req.params.lat)
     const longitude = parseFloat(req.params.long)
 
-    const locations = await new Location().fetchAll()
+    const locations = await new Location().fetchAll({withRelated: 'bar'})
 
     const locationsJSON = locations.toJSON();
     const result = locationsJSON.map(Object.values);
@@ -275,8 +275,8 @@ router.get('/:lat' + '/:long', async (req: Request, res: Response) => {
         console.log(result[index])
     }
 
-    const citiesSortedByAsc = result.sort((a: any, b: any) => a[7] - b[7])
-    const arrCitiesSorted: { id: number; title: string; lat: number; long: number; distance: number; }[] = []
+    const citiesSortedByAsc = result.sort((a: any, b: any) => a[8] - b[8])
+    const arrCitiesSorted: { id: number; title: string; lat: number; long: number; distance: number; bar: any }[] = []
 
     citiesSortedByAsc.forEach((element: any[]) => {
         arrCitiesSorted.push({
@@ -284,7 +284,8 @@ router.get('/:lat' + '/:long', async (req: Request, res: Response) => {
             'title': element[1],
             'lat': element[5],
             'long': element[6],
-            'distance': element[7]
+            'bar': element[7],
+            'distance': element[8]
         })
     });
     return res.status(200).send(arrCitiesSorted);
