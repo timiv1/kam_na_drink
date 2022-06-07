@@ -10,7 +10,7 @@ export default function useMap() {
                 apiKey: process.env.VUE_APP_GOOGLE_MAPS_KEY,
                 config: {
                     center: center,
-                    zoom: 8, // The initial zoom level to be rendered by the map
+                    zoom: 14, // The initial zoom level to be rendered by the map
                 },
                 forceCreate: true,
             };

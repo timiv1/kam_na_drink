@@ -20,7 +20,6 @@
 import { Navigation } from "swiper";
 import HomePage from "./HomePage.vue";
 import ProfilePage from "./ProfilePage.vue";
-import { mapState } from "vuex";
 import BasePage from "../components/BasePage.vue";
 import { defineComponent } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -60,12 +59,13 @@ export default defineComponent({
   // ionic hook when view is ready
   async ionViewDidEnter() {
     // create map with
-    this.mapInstance = await useMap().createMap({
-      lat: 46.40589298093361,
-      lng: 14.152709680733068,
-    });
     const coordinates: Position | undefined =
       await Geolocation.getCurrentPosition();
+    this.mapInstance = await useMap().createMap({
+      lat: coordinates.coords.latitude,
+      lng: coordinates.coords.longitude,
+    });
+
     await this.getCloseByBars.get(
       `location/${coordinates.coords.latitude}/${coordinates.coords.longitude}`
     );
@@ -95,7 +95,6 @@ export default defineComponent({
     showMap() {
       return true;
     },
-    ...mapState("auth", { borovnicke: "borovnicke" }),
   },
 });
 </script>
