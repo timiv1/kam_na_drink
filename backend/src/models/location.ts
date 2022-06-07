@@ -4,7 +4,7 @@ import { Bar } from "./bar"
 const Location = bookshelf.model("Location", {
     tableName: 'locations',
     bar() {
-        this.hasOne(Bar)
+        return this.hasOne(Bar)
     }
 })
 export { Location }
