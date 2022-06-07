@@ -39,10 +39,10 @@
         v-for="item in filteredDrinks"
         @click="displayBarsWithDrink(item)"
       >
-        <ion-label>{{ 
-        item.volume === null ?
-        item.name + ' ' :
-        item.name + ' ' + checkNullAddSign(item.volume, " L")       
+        <ion-label>{{
+          item.volume === null
+            ? item.name + " "
+            : item.name + " " + checkNullAddSign(item.volume, " L")
         }}</ion-label>
       </ion-item>
     </ion-list>
@@ -143,7 +143,7 @@ export default defineComponent({
         const filter = this.searchValue.toLowerCase();
         const filteredDrinks = this.getDrinks.result.value.filter(
           (drink: any) => {
-            return drink.name.includes(filter);
+            return drink.name.toLowerCase().includes(filter);
           }
         );
         return filteredDrinks;
@@ -153,7 +153,7 @@ export default defineComponent({
       if (!this.getBars.loading.value) {
         const filter = this.searchValue.toLowerCase();
         const filteredBar = this.getBars.result.value.filter((bar: any) => {
-          return bar.name.includes(filter);
+          return bar.name.toLowerCase().includes(filter);
         });
         return filteredBar;
       } else return [];
@@ -166,7 +166,8 @@ export default defineComponent({
     showBarsWithDrinks(): any {
       if (
         this.searchMode == "drink" &&
-        this.getBarsWithDrink.result.value != null
+        this.getBarsWithDrink.result.value != null &&
+        this.searchValue != ""
       )
         return true;
       else return false;
@@ -199,8 +200,10 @@ export default defineComponent({
     setSerachMode(mode: string) {
       if (mode == "drink") {
         this.searchMode = "drink";
+        this.searchValue = "";
       } else if (mode == "bar") {
         this.searchMode = "bar";
+        this.searchValue = "";
       } else {
         console.log(`un supported mode ${mode}`);
       }
@@ -210,11 +213,11 @@ export default defineComponent({
     },
 
     displayBarsWithDrink(item: any) {
-      if(item.volume === null){
-        this.searchValue = item.name
-      }
-      else{
-        this.searchValue = item.name + ' ' + checkNullAddSign(item.volume, " L")
+      if (item.volume === null) {
+        this.searchValue = item.name;
+      } else {
+        this.searchValue =
+          item.name + " " + checkNullAddSign(item.volume, " L");
       }
       this.getBarsWithDrink.get(`menus/menudrinks/drink/${item.id}`);
     },
