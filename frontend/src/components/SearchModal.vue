@@ -96,7 +96,7 @@ import { ref, onMounted, nextTick } from "vue";
 import { wineOutline, homeOutline } from "ionicons/icons";
 
 export default defineComponent({
-  name: "DrinkModal",
+  name: "SearchModal",
   components: {
     IonContent,
     IonHeader,
@@ -135,7 +135,11 @@ export default defineComponent({
     this.getBars.get("bars");
   },
   data() {
-    return { searchValue: "" as any, searchMode: "drink" as string };
+    return {
+      searchReset: true,
+      searchValue: "" as any,
+      searchMode: "drink" as string,
+    };
   },
   computed: {
     filteredDrinks(): any {
@@ -167,7 +171,7 @@ export default defineComponent({
       if (
         this.searchMode == "drink" &&
         this.getBarsWithDrink.result.value != null &&
-        this.searchValue != ""
+        this.searchReset == false
       )
         return true;
       else return false;
@@ -213,6 +217,7 @@ export default defineComponent({
     },
 
     displayBarsWithDrink(item: any) {
+      this.searchReset = false;
       if (item.volume === null) {
         this.searchValue = item.name;
       } else {
@@ -225,6 +230,11 @@ export default defineComponent({
     goToBarPage(id: string | number) {
       this.$router.push(`/bar/${id}`);
       modalController.dismiss();
+    },
+  },
+  watch: {
+    searchValue(value) {
+      if (value == "") this.searchReset = true;
     },
   },
 });
