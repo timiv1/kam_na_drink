@@ -10,6 +10,7 @@ const compilerOptions = {
   strictNullChecks: true,
 };
 
+
 const program = tjs.getProgramFromFiles([path.resolve("src/models/schema_definitions.ts")], compilerOptions, "./");
 
 const schema = tjs.generateSchema(program, "*", settings);

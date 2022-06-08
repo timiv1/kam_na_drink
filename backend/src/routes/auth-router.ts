@@ -9,13 +9,6 @@ import extractJWT from 'src/middleware/extractJWT';
 const router = Router();
 const NAMESPACE = 'Auth';
 
-export const p = {
-    get: '/',
-    add: '/',
-    update: '/',
-    delete: '/',
-} as const;
-
 /** User object
  * @swagger
  * components:
@@ -51,7 +44,6 @@ export const p = {
 *         in: header       # can be "header", "query" or "cookie"
 *         name: Authorization  # name of the header, query parameter or cookie
 */
-
 
 /** Validates the Token
  * @swagger
@@ -101,16 +93,23 @@ router.get('/validateToken', extractJWT, async (req: Request, res: Response) => 
 *         description: Some server error
 */
 router.post('/register', async (req: Request, res: Response) => {
-    const { password } = req.body;
-    bcryptjs.hash(password, 10, async (hashError, hash) => {
+    const { password } = req.body.password;
+    const email = req.body.email
+    const users = await new User().where({ email: email }).fetchAll();
+
+    if (users){
+        return res.status(401).json({
+            message: 'User with the same email address already exists'
+        });
+    }
+    else{bcryptjs.hash(password, 10, async (hashError, hash) => {
+        try {
         if (hashError) {
             return res.status(401).json({
                 message: hashError.message,
                 error: hashError
             });
-        }
-
-        try {
+        }        
             const newUser = req.body;
             newUser.password = hash;
 
@@ -124,14 +123,13 @@ router.post('/register', async (req: Request, res: Response) => {
 
         } catch (error) {
             logging.error(NAMESPACE, error.message, error);
-
             return res.status(500).json({
                 message: error.message,
                 error
             });
         }
     })
-});
+}});
 
 /** Login a new user
 * @swagger
@@ -163,10 +161,12 @@ router.post('/login', async (req: Request, res: Response) => {
     const usersJSON = users.toJSON();
 
     await bcryptjs.compare(password, usersJSON[0].password, (error, result) => {
+        
         if (result.valueOf() === false || result.valueOf() === null) {
             return res.status(401).json({
                 message: 'Password Mismatch'
             });
+
         } else if (result) {
             signJWT(usersJSON[0], (_error, token) => {
                 if (_error) {

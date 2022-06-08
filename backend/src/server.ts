@@ -44,8 +44,6 @@ app.use('/api', apiRouter);
 /***********************************************************************************
  *                                  Swagger
  **********************************************************************************/
-const PORT = process.env.PORT || 300;
-
 app.use('/api', apiRouter);
 
 const swaggerSpec = swaggerJsdoc({
@@ -76,7 +74,7 @@ const swaggerSpec = swaggerJsdoc({
     }],
     servers: [
       {
-        url: `http://localhost:${PORT}/`,
+        url: `http://localhost:${process.env.SERVER_PORT}/`,
       },
     ],
   },
@@ -86,6 +84,4 @@ const swaggerSpec = swaggerJsdoc({
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-
-// Export here and start in a diff file (for testing).
 export default app;
