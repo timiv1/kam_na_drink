@@ -132,7 +132,7 @@ import {
 export default defineComponent({
   name: "ProfilePage",
   computed: {
-    ...mapState("auth", { borovnicke: "borovnicke" }),
+    ...mapState("auth", { userData: "authData" }),
   },
   components: {
     IonGrid,
@@ -152,7 +152,6 @@ export default defineComponent({
     let getUser = useAxios();
     let getDrink = useAxios();
     let post = useAxios();
-    const userId = 1; //set userId here!!!
 
     const openDrinkModal = async (drink_id: string) => {
       await getDrink.get(`drinks/${drink_id}`);
@@ -184,13 +183,12 @@ export default defineComponent({
       getUser,
       getDrink,
       post,
-      userId,
       openDrinkModal,
       close,
     };
   },
   async mounted() {
-    await this.getUser.get(`users/${this.userId}`);
+    await this.getUser.get(`users/${this.userData.id}`);
   },
   methods: {
     capitalize,
@@ -214,7 +212,7 @@ export default defineComponent({
               } else if (x === 1) {
                 await axios.remove(`users/userbars/${id}`);
               }
-              await this.getUser.get(`users/${this.userId}`);
+              await this.getUser.get(`users/${this.userData.id}`);
               this.openToast(item);
             },
           },
@@ -233,8 +231,6 @@ export default defineComponent({
 });
 </script>
 <style>
-
-
 .ionlabelbuttonfix {
   height: 100%;
   width: 100%;
@@ -242,6 +238,4 @@ export default defineComponent({
   align-items: center;
   justify-content: left;
 }
-
-
 </style>
