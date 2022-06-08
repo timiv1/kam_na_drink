@@ -76,30 +76,34 @@ export default defineComponent({
     if (this.getCloseByBars.result)
       this.getCloseByBars.result.value?.forEach((location: any) => {
         markers.push({
+          snippet: "",
+          title: location.bar.name,
           coordinate: {
             lat: location.lat,
             lng: location.long,
           },
-          title: location.title,
-          snippet: location.title,
         });
       });
     this.mapInstance?.addMarkers(markers);
     this.mapInstance?.setOnMarkerClickListener((data) => {
-      console.log("map data");
-      console.log(data);
+      const barId = this.getBarFromName(
+        data.title,
+        this.getCloseByBars.result.value
+      );
+      this.$router.push(`/bar/${barId}`);
     });
   },
   data() {
     return { mapInstance: undefined as GoogleMap | undefined };
   },
   computed: {
-    // TODO on android all backgrounds need to be transperent to show map on a page but than map is also shown in every page.
-    // To fix this hide map when on different route or setup backgrounds to be not transparent on other pages.
-
-    // TODO check if you can swipe on mobile when map is rendered
     showMap() {
       return true;
+    },
+  },
+  methods: {
+    getBarFromName(name: string, bars: any) {
+      return bars.find((closeBars: any) => closeBars.bar.name == name).bar.id;
     },
   },
 });
