@@ -71,8 +71,6 @@ export default defineComponent({
     );
     // Change objects to be compatable with type Marker
     let markers: Array<Marker> = [];
-    console.log("result");
-    console.log(this.getCloseByBars.result.value);
     if (this.getCloseByBars.result)
       this.getCloseByBars.result.value?.forEach((location: any) => {
         markers.push({

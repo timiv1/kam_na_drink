@@ -199,7 +199,6 @@
   </ion-page>
 </template>
 <script lang="ts">
-import { mapState } from "vuex";
 import { defineComponent } from "vue";
 import { checkNullAddSign } from "../composables/checkNullAddSign";
 import {
@@ -221,9 +220,6 @@ import {
 import useAxios from "../composables/useAxios";
 export default defineComponent({
   name: "BarPage",
-  computed: {
-    ...mapState("auth", { borovnicke: "borovnicke" }),
-  },
   components: {
     IonGrid,
     IonRow,

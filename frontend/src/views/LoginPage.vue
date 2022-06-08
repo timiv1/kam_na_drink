@@ -82,7 +82,6 @@ export default defineComponent({
       if (this.form.email != "" && this.form.password != "") {
         const payload = this.form;
         await this.loginUser.post("auth/login", payload);
-        console.log(`error handle login: ${this.loginUser.error.value}`);
         if (this.loginUser.error.value != null) {
           const alert = await alertController.create({
             header: "Error",

@@ -56,7 +56,6 @@ export default defineComponent({
     },
     openModal() {
       this.isOpenRef = true;
-      console.log("open");
     },
   },
 });

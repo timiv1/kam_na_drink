@@ -44,6 +44,10 @@
             ? item.name + " "
             : item.name + " " + checkNullAddSign(item.volume, " L")
         }}</ion-label>
+        <ion-icon
+          v-if="getFavouriteDrinks.result.value != null"
+          :icon="getfavouriteIcon(item.id, 'drink')"
+        ></ion-icon>
       </ion-item>
     </ion-list>
     <!-- result display for bars with drinks -->
@@ -66,6 +70,10 @@
         @click="goToBarPage(item.id)"
       >
         <ion-label>{{ `${item.name}` }}</ion-label>
+        <ion-icon
+          v-if="getFavouriteDrinks.result.value != null"
+          :icon="getfavouriteIcon(item.id, 'bar')"
+        ></ion-icon>
       </ion-item>
     </ion-list>
     <br />
@@ -93,7 +101,8 @@ import { defineComponent } from "vue";
 import useAxios from "@/composables/useAxios";
 import { checkNullAddSign } from "../composables/checkNullAddSign";
 import { ref, onMounted, nextTick } from "vue";
-import { wineOutline, homeOutline } from "ionicons/icons";
+import { wineOutline, homeOutline, heart, heartOutline } from "ionicons/icons";
+import { mapState } from "vuex";
 
 export default defineComponent({
   name: "SearchModal",
@@ -116,11 +125,24 @@ export default defineComponent({
     const getDrinks = useAxios();
     const getBarsWithDrink = useAxios();
     const getBars = useAxios();
+    const getFavouriteDrinks = useAxios();
+    const postFavouriteDrinks = useAxios();
+    const deleteFavouriteDrinks = useAxios();
+
+    const getFavouriteBars = useAxios();
+    const postFavouriteBars = useAxios();
+    const deleteFavouriteBars = useAxios();
 
     // const isOpenRef = ref<boolean>(false);
     const data = { content: "New Content" };
 
     return {
+      getFavouriteDrinks,
+      postFavouriteDrinks,
+      deleteFavouriteDrinks,
+      getFavouriteBars,
+      postFavouriteBars,
+      deleteFavouriteBars,
       getDrinks,
       getBarsWithDrink,
       getBars,
@@ -128,11 +150,15 @@ export default defineComponent({
       checkNullAddSign,
       wineOutline,
       homeOutline,
+      heart,
+      heartOutline,
     };
   },
-  created() {
-    this.getDrinks.get("drinks");
-    this.getBars.get("bars");
+  async created() {
+    await this.getDrinks.get("drinks");
+    await this.getBars.get("bars");
+    await this.getFavouriteBars.get(`users/${this.userData.id}/userBars`);
+    await this.getFavouriteDrinks.get(`users/${this.userData.id}/userDrinks`);
   },
   data() {
     return {
@@ -199,8 +225,32 @@ export default defineComponent({
       }
       return "search";
     },
+    ...mapState("auth", { userData: "authData" }),
   },
   methods: {
+    getfavouriteIcon(id: number, type: string) {
+      // če
+
+      if (type == "drink") {
+        const drink = this.getFavouriteDrinks.result.value.some(function (
+          userDrink: any
+        ) {
+          userDrink.drink_id === id;
+        });
+        if (drink != undefined && drink) return this.heart;
+      } else if (type == "bars") {
+        const bar = this.getFavouriteBars.result.value.some(function (
+          bar: any
+        ) {
+          bar.id == id;
+        });
+        if (bar != undefined && bar) return this.heart;
+      } else {
+        console.log("type not supported");
+        return this.heartOutline;
+      }
+      return this.heartOutline;
+    },
     setSerachMode(mode: string) {
       if (mode == "drink") {
         this.searchMode = "drink";
