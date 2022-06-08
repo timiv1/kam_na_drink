@@ -106,7 +106,6 @@ router.get('/:id', async (req: Request, res: Response) => {
         const contact = await new Contact({ id }).fetch()
         return res.status(200).send(contact)
     } catch (error: any) {
-        console.log(error)
         if (error.message === "EmptyResponse")
         return res.sendStatus(404)
       else

@@ -215,41 +215,6 @@ router.get("/:id", async (req: Request, res: Response) => {
     }
 });
 
-// /** Create a new user
-//  * @swagger
-//  * /api/users:
-//  *   post:
-//  *     summary: Create a new user
-//  *     tags: [Users]
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         application/json:
-//  *           schema:
-//  *             $ref: '#/components/schemas/user'
-//  *     responses:
-//  *       200:
-//  *         description: The user was successfully created
-//  *         content:
-//  *           application/json:
-//  *             schema:
-//  *               $ref: '#/components/schemas/user'
-//  *       500:
-//  *         description: Some server error
-//  */
-// router.post(p.add, async (req: Request, res: Response) => {
-//     try {
-//         const newUser = req.body;
-//         if (!newUser) {
-//             throw new ParamMissingError();
-//         }
-//         const newEntry = await new User().save(newUser);
-//         return res.status(CREATED).json(newEntry);
-//     } catch (error) {
-//         console.log(error);
-//     }
-// });
-
 /** Update a user
  * @swagger
  * /api/users/{id}:

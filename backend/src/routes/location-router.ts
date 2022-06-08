@@ -101,7 +101,6 @@ type RequestBody<T> = Request<{}, {}, T>;
 router.get('/', async (req: Request, res: Response) => {
     try {
         const location = await new Location().fetchAll()
-        console.log(location)
         return res.status(200).send(location)
     } catch (error) {
         if (error.message === "EmptyResponse")
@@ -272,7 +271,6 @@ router.get('/:lat' + '/:long', async (req: Request, res: Response) => {
     for (let index = 0; index < result.length; ++index) { 
         const dif = PythagorasEquirectangular.PythagorasEquirectangular(latitude, longitude, result[index][5], result[index][6]);
         result[index].push(dif)
-        console.log(result[index])
     }
 
     const citiesSortedByAsc = result.sort((a: any, b: any) => a[8] - b[8])

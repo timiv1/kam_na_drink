@@ -1,12 +1,8 @@
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import helmet from 'helmet';
-
 import express from 'express';
 import 'express-async-errors';
-
 import apiRouter from './routes/api';
-
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
@@ -29,21 +25,10 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
-// Security (helmet recommended in express docs)
-if (process.env.NODE_ENV === 'production') {
-    app.use(helmet());
-}
-
-/***********************************************************************************
- *                         API routes and error handling
- **********************************************************************************/
-
-// Add api router
-app.use('/api', apiRouter);
-
 /***********************************************************************************
  *                                  Swagger
  **********************************************************************************/
+// Add api router
 app.use('/api', apiRouter);
 
 const swaggerSpec = swaggerJsdoc({

@@ -292,7 +292,6 @@ router.get('/menudrinks/all', async (_: Request, res: Response) => {
 router.get("/:id/menudrinks", async (req: Request, res: Response) => {
     try {
         const id = req.params.id
-        console.log(id)
         const menu_drinks = await new DrinkMenu().where({ menu_id: id }).fetchAll({ withRelated: "drink" });
         return res.status(200).json(menu_drinks);
     } catch (error) {

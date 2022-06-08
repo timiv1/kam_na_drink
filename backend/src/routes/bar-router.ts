@@ -125,7 +125,6 @@ router.get('/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id
     const bar = await new Bar({ id }).fetch({ withRelated: ["location", "contact", "work_times_bars.workTime", "menu.drinks.drink"] })
-    console.log('bar')
     return res.status(200).send(bar)
   } catch (error) {
     if (error.message === "EmptyResponse")
@@ -162,12 +161,9 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.get('/:id/work_time', async (req: Request, res: Response) => {
   try {
     const id = req.params.id
-    const workTimeBar = await new WorkTimeBar().where({ bar_id: id }).fetchAll({ withRelated: ["workTime"], omitPivot: false }
-    )
-    console.log('bar')
+    const workTimeBar = await new WorkTimeBar().where({ bar_id: id }).fetchAll({ withRelated: ["workTime"], omitPivot: false })
     return res.status(200).send(workTimeBar)
   } catch (error) {
-    console.log(error)
     if (error.message === "EmptyResponse")
       return res.sendStatus(404)
     else
@@ -242,7 +238,6 @@ router.post('/barworktime', async (req: Request, res: Response) => {
       return res.status(500).send("missing parameter")
     }
     const workTimeBar = await new WorkTimeBar().save(data);
-    console.log(workTimeBar)
     return res.status(200).json(workTimeBar);
   } catch (error) {
     if (error.message === "EmptyResponse")
